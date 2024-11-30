@@ -1,0 +1,50 @@
+import { OtpM } from '../otps/otp';
+import { ReportM } from '../reports/report';
+export interface UserWithoutPassword {
+    id: number;
+    name: string;
+    lastName: string;
+    email: string;
+    nickname: string;
+    status: string;
+    createdAt: Date;
+    updatedAt: Date;
+    reports: ReportM[];
+    otps: OtpM;
+}
+export declare class UserM {
+    private _id;
+    private _name;
+    private _lastName;
+    private _email;
+    private _password;
+    private _nickname;
+    private _status;
+    private _created_at;
+    private _updated_at;
+    private _reports;
+    private _otps;
+    constructor(id: number, name: string, lastName: string, email: string, password: string, nickname: string, status?: string, created_at?: Date, updated_at?: Date, reports?: ReportM[], otps?: OtpM[]);
+    get id(): number;
+    set id(value: number);
+    get name(): string;
+    set name(value: string);
+    get lastName(): string;
+    set lastName(value: string);
+    get email(): string;
+    set email(value: string);
+    get password(): string;
+    set password(value: string);
+    get nickname(): string;
+    set nickname(value: string);
+    get status(): string;
+    set status(value: string);
+    get createdAt(): Date;
+    set createdAt(value: Date);
+    get updatedAt(): Date;
+    set updatedAt(value: Date);
+    get reports(): ReportM[];
+    set reports(value: ReportM[]);
+    get otps(): OtpM[];
+    set otps(value: OtpM[]);
+}
