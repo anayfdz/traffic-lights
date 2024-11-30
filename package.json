@@ -23,10 +23,10 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./jest-e2e.json --coverage",
     "typeorm:win": "cross-env NODE_ENV=local ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -f src/infrastructure/config/typeorm/typeorm.config.ts",
-    "typeorm:generate:win": "npm run typeorm:win migration:generate -- -n",
-    "typeorm:create:win": "npm run typeorm:win migration:create -n",
-    "typeorm:run:win": "npm run typeorm:win migration:run",
-    "typeorm:revert:win": "npm run typeorm:win migration:revert"
+    "typeorm:generate:win": "cross-env NODE_ENV=local ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate -n",
+    "typeorm:create:win": "cross-env NODE_ENV=local ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create -n",
+    "typeorm:run:win": "cross-env NODE_ENV=local ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -f src/infrastructure/config/typeorm/typeorm.config.ts",
+    "typeorm:revert:win": "cross-env NODE_ENV=local ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -f src/infrastructure/config/typeorm/typeorm.config.ts"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.18",
