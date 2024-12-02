@@ -4,14 +4,14 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export class ResponseFormat<T> {
-  @ApiProperty()
-  isArray: boolean;
-  @ApiProperty()
-  path: string;
-  @ApiProperty()
-  duration: string;
-  @ApiProperty()
-  method: string;
+  @ApiProperty({ required: false })
+  isArray?: boolean;
+  @ApiProperty({ required: false })
+  path?: string;
+  @ApiProperty({ required: false })
+  duration?: string;
+  @ApiProperty({ required: false })
+  method?: string;
 
   data: T;
 }
@@ -24,13 +24,21 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, ResponseFormat
     const request = httpContext.getRequest();
 
     return next.handle().pipe(
-      map((data) => ({
-        data,
-        isArray: Array.isArray(data),
-        path: request.path,
-        duration: `${Date.now() - now}ms`,
-        method: request.method,
-      })),
+      map((data) => {
+        // Si los datos tienen un mensaje, devuelve solo el mensaje
+        if (data && data.message) {
+          return { data: data.message }; // solo el mensaje
+        }
+        // Si no es un mensaje, sigue con la estructura de la respuesta
+        return {
+          data,
+          isArray: Array.isArray(data),
+          path: request.path,
+          duration: `${Date.now() - now}ms`,
+          method: request.method,
+        };
+      }),
     );
   }
 }
+
