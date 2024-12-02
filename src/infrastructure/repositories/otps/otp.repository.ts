@@ -15,7 +15,7 @@ export class OtpService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly mailService: MailService
-  ) {}
+  ) { }
 
   // Método para generar un OTP y asociarlo con un usuario
   async generateOtp(userId: number): Promise<Otp> {
@@ -24,25 +24,27 @@ export class OtpService {
       throw new NotFoundException('User not found');
     }
 
-    // Generamos un código OTP aleatorio de 6 dígitos
+    // código OTP aleatorio de 6 dígitos
     const otpCode = crypto.randomBytes(3).toString('hex');
 
-    // Definimos la fecha de expiración (1 hora a partir de ahora)
+    // fecha de expiración (1 hora a partir de ahora)
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 1);  // Expira en 1 hora
 
-    // Creamos el OTP en la base de datos
+    // OTP en la base de datos
     const otp = this.otpRepository.create({
       user,
       otp_code: otpCode,
       expires_at: expiresAt,
     });
 
+    await this.sendOtpByEmail(user.email, otpCode);
+
     await this.otpRepository.save(otp);
     return otp;
   }
 
-  // Método para verificar un OTP
+  // verificar un OTP
   async verifyOtp(userId: number, otpCode: string): Promise<boolean> {
     const otp = await this.otpRepository.findOne({
       where: { user: { id: userId }, otp_code: otpCode },
@@ -58,9 +60,9 @@ export class OtpService {
 
     return true;  // OTP es válido y no ha expirado
   }
-async sendOtpByEmail(email: string, otp: string): Promise<void> { 
-  const subject = 'Your OTP Code'; 
-  const message = `Your OTP code is ${otp}`; 
-  await this.mailService.sendMail(email, subject, message);
-}
+  async sendOtpByEmail(email: string, otp: string): Promise<void> {
+    const subject = 'Your OTP Code';
+    const message = `Your OTP code is ${otp}`;
+    await this.mailService.sendMail(email, subject, message);
+  }
 }

@@ -11,6 +11,12 @@ import { ValidateEmailUsecases } from 'src/usecases/user/validate-email.usecases
 import { UsecasesProxyModule } from 'src/infrastructure/usecases-proxy/usecases-proxy.module';
 import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases-proxy';
 
+
+interface ResponseValidEmail {
+  message: string
+}
+
+
 @Controller('api/users')
 export class UserController {
   constructor(@Inject(UsecasesProxyModule.REGISTER_USECASES_PROXY)
@@ -25,9 +31,13 @@ export class UserController {
   }
 
   @Post('validate-email')
-  async validateEmail(@Body() validateEmailDto: ValidateEmailDto): Promise<boolean> {
+  async validateEmail(@Body() validateEmailDto: ValidateEmailDto): Promise<ResponseValidEmail> {
     const validate = this.validateEmailUseCase.getInstance();
-    return validate.execute(validateEmailDto);
+    const isValid = validate.execute(validateEmailDto);
+    if (!isValid) {
+      throw new Error('Invalid Otp')
+    }
+    return {message: 'Correo electrónico validado con éxito.'}
   }
 
   // @Post('login') 

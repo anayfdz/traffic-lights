@@ -6,7 +6,9 @@ export class ValidateEmailUsecases {
 
     }
     async execute(validateEmailDto: ValidateEmailDto): Promise<boolean> {
-        const isValid = await this.userRepository.validateEmailWithOtp({email: validateEmailDto.email, otp_code: validateEmailDto.otp_code})
+        const isValid = await this.userRepository.validateEmailWithOtp({
+            email: validateEmailDto.email, 
+            otp_code: validateEmailDto.otp_code})
          if (!isValid) { throw new Error('Invalid OTP');
     }
     return isValid;
