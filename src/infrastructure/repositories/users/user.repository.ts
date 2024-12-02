@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { UserM } from '../../../domain/model/users/user';
 import { UserRepository } from '../../../domain/repositories/users/userRepository.interface';
 import { User } from '../../entities/users/user.entity';
@@ -35,6 +35,7 @@ export class DatabaseUserRepository implements UserRepository {
     // Primero, creamos el nuevo usuario
     const userEntity = new User();
     userEntity.name = createUserDto.name;
+    userEntity.last_name = createUserDto.last_name;
     userEntity.password = await this.bcryptService.hash(createUserDto.password);
     userEntity.nickname = createUserDto.nickname;
     userEntity.email = createUserDto.email;
@@ -63,18 +64,12 @@ export class DatabaseUserRepository implements UserRepository {
      await this.otpService.generateOtp(user.id);
     }
   
-    // async login(loginDto: LoginDto) { 
-    //   return this.userEntityRepository.execute(loginDto.email, loginDto.password); 
-    // } 
-    // async logout() { 
-    //   return this.userEntityRepository.execute();
-    // }
 
     async getUserByUsername(username: string): Promise<UserM> {
       const adminUserEntity = await this.userEntityRepository.findOne({
         where: {
           username: username,
-        },
+        } as FindOptionsWhere<User>,
       });
       if (!adminUserEntity) {
         return null;
@@ -85,7 +80,7 @@ export class DatabaseUserRepository implements UserRepository {
       const adminUserEntity = await this.userEntityRepository.findOne({
         where: {
           email,
-        },
+        } as FindOptionsWhere<User>,
       });
       if (!adminUserEntity) {
         return null;
@@ -95,7 +90,7 @@ export class DatabaseUserRepository implements UserRepository {
 
   // Validar usuario por correo electrónico
   async validateEmailWithOtp(validateEmailDto: ValidateEmailDto): Promise<boolean> {
-    const user = await this.userEntityRepository.findOne({ where: { email: validateEmailDto.email } });
+    const user = await this.userEntityRepository.findOne({ where: { email: validateEmailDto.email } as FindOptionsWhere<User> });
 
     if (!user) {
       throw new Error('Usuario no encontrado');

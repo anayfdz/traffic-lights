@@ -1,4 +1,4 @@
-import { ConnectionOptions } from 'typeorm';
+import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 import * as path from 'path'; 
 
@@ -6,26 +6,24 @@ if (process.env.NODE_ENV === 'local') {
   dotenv.config({ path: './env/local.env' });
 }
 
-const config: ConnectionOptions = {
+const config = new DataSource({
   type: 'postgres',
   host: process.env.DATABASE_HOST,
   port: parseInt(process.env.DATABASE_PORT),
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
-  entities: [__dirname + './../../**/*.entity{.ts,.js}'],
+  entities: [
+    path.join(__dirname, './../../**/*.entity{.ts,.js}')
+  ],
   synchronize: false,
   schema: process.env.DATABASE_SCHEMA,
   migrationsRun: true,
   migrationsTableName: 'migration_todo',
-  migrations: ['dist/database/migrations/**/*{.ts,.js}'],
-  cli: {
-    migrationsDir: path.join(__dirname, 'src/database/migrations'),
-  },
-  // ssl: {
-  //   rejectUnauthorized: false,
-  // },
-};
+  migrations: [
+    path.join(__dirname, './../../dist/database/migrations/**/*{.ts,.js}')
+  ],
+});
 
 console.log(config);
 

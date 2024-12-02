@@ -1,11 +1,12 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { UserModule } from 'src/infrastructure/repositories/users/user.module';
 import { RegisterUserUseCase } from './register-user.usecases';
 import { ValidateEmailUsecases } from './validate-email.usecases';
+import { ExternalService } from 'src/infrastructure/repositories/users/external-service/external.service';
 
 @Module({
-  imports: [UserModule],
-  providers: [RegisterUserUseCase, ValidateEmailUsecases],
-  exports: [RegisterUserUseCase, ValidateEmailUsecases],
+  imports: [UserModule, HttpModule],
+  providers: [ExternalService, ValidateEmailUsecases],
+  exports: [ExternalService, ValidateEmailUsecases],
 })
 export class UserCasesModule {}

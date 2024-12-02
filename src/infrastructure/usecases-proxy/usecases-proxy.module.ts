@@ -20,17 +20,23 @@ import { EnvironmentConfigModule } from '../config/environment-config/environmen
 import { EnvironmentConfigService } from '../config/environment-config/environment-config.service';
 import { UseCaseProxy } from './usecases-proxy';
 import { MailModule } from 'src/usecases/otps/mail.module';
+import { RegisterUserUseCase } from 'src/usecases/user/register-user.usecases';
+import { ValidateEmailUsecases } from 'src/usecases/user/validate-email.usecases';
+import { ExternalService } from '../repositories/users/external-service/external.service';
+import { ExternalModule } from '../repositories/users/external-service/external.module';
 
 @Module({
-  imports: [LoggerModule, JwtModule, BcryptModule, MailModule, EnvironmentConfigModule, RepositoriesModule, ExceptionsModule],
+  imports: [LoggerModule, JwtModule, BcryptModule, MailModule, EnvironmentConfigModule, RepositoriesModule, ExceptionsModule, ExternalModule],
 })
 export class UsecasesProxyModule {
   // Auth
   static LOGIN_USECASES_PROXY = 'LoginUseCasesProxy';
   static IS_AUTHENTICATED_USECASES_PROXY = 'IsAuthenticatedUseCasesProxy';
   static LOGOUT_USECASES_PROXY = 'LogoutUseCasesProxy';
+  // Users
   static RESEND_USECASES_PROXY = 'ResendOtpUsecasesProxy';
-
+  static REGISTER_USECASES_PROXY = 'RegisterUseCasesProxy';
+  static VALIDATE_USECASES_EMAIL_PROXY = 'ValidateEmailUsecasesProxy'
 
   // mail 
   static MAIL_SERVICE = 'MailModule';
@@ -66,6 +72,16 @@ export class UsecasesProxyModule {
           provide: UsecasesProxyModule.RESEND_USECASES_PROXY,
           useFactory: () => new UseCaseProxy(new LogoutUseCases()),
         },
+        {
+          inject: [DatabaseUserRepository, ExternalService],
+          provide: UsecasesProxyModule.REGISTER_USECASES_PROXY,
+          useFactory: (userRepo: DatabaseUserRepository, externalService: ExternalService) => new UseCaseProxy(new RegisterUserUseCase(userRepo, externalService)),
+        },
+        {
+          inject: [DatabaseUserRepository],
+          provide: UsecasesProxyModule.VALIDATE_USECASES_EMAIL_PROXY,
+          useFactory: (userRepo: DatabaseUserRepository) => new UseCaseProxy(new ValidateEmailUsecases(userRepo)),
+        },
         // mail service
         {
           inject: [OtpService],
@@ -79,6 +95,8 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.IS_AUTHENTICATED_USECASES_PROXY,
         UsecasesProxyModule.LOGOUT_USECASES_PROXY,
         UsecasesProxyModule.MAIL_SERVICE,
+        UsecasesProxyModule.REGISTER_USECASES_PROXY,
+        UsecasesProxyModule.VALIDATE_USECASES_EMAIL_PROXY,
       ],
     };
   }

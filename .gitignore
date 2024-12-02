@@ -1,6 +1,44 @@
-server/node_modules
-server/dist
-server/coverage
-server/coverage-e2e
-server/test/coverage
-node_modules
+# Node.js dependencies
+/node_modules
+
+# Build output
+/dist
+/build
+
+# TypeORM migration files
+/database/migrations/*.js
+/database/migrations/*.ts
+
+# TypeScript & editor specific
+*.tsbuildinfo
+*.log
+
+# Environment files
+.env
+env/
+.env.local
+.env.*.local
+
+# IDEs and editors
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# NPM log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Jest coverage directory
+/coverage
+
+# TypeScript compiled files
+*.js
+*.d.ts
+*.map
+
+# NestJS specific
+/.nestjs
