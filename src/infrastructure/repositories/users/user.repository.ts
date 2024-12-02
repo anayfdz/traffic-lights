@@ -25,7 +25,7 @@ export class DatabaseUserRepository implements UserRepository {
     private readonly userEntityRepository: Repository<User>,
     private readonly otpService: OtpService,
     private readonly bcryptService: BcryptService,
-  ) {}
+  ) { }
 
   async registerUser(createUserDto: CreateUserDto): Promise<UserM> {
     const existingUser = await this.userEntityRepository.findOne({ where: { email: createUserDto.email } });
@@ -40,6 +40,9 @@ export class DatabaseUserRepository implements UserRepository {
     userEntity.nickname = createUserDto.nickname;
     userEntity.email = createUserDto.email;
     userEntity.status = 'pending_validation';
+
+    userEntity.reports = [];
+    userEntity.otps = [];
 
     const savedUser = await this.userEntityRepository.save(userEntity);
 
@@ -56,37 +59,38 @@ export class DatabaseUserRepository implements UserRepository {
     return await this.userEntityRepository.findOne({ where: { id: userId } });
   }
 
-  async resendOtp(email: string): Promise<void> { 
+  async resendOtp(email: string): Promise<void> {
     const user = await this.userEntityRepository.findOne({ where: { email } });
-     if (!user) { throw new Error('User not found'); 
+    if (!user) {
+      throw new Error('User not found');
 
-     } 
-     await this.otpService.generateOtp(user.id);
     }
-  
+    await this.otpService.generateOtp(user.id);
+  }
 
-    async getUserByUsername(username: string): Promise<UserM> {
-      const adminUserEntity = await this.userEntityRepository.findOne({
-        where: {
-          username: username,
-        } as FindOptionsWhere<User>,
-      });
-      if (!adminUserEntity) {
-        return null;
-      }
-      return this.toUser(adminUserEntity);
+
+  async getUserByUsername(username: string): Promise<UserM> {
+    const adminUserEntity = await this.userEntityRepository.findOne({
+      where: {
+        username: username,
+      } as FindOptionsWhere<User>,
+    });
+    if (!adminUserEntity) {
+      return null;
     }
-    async getUserByEmail(email: string): Promise<boolean> {
-      const adminUserEntity = await this.userEntityRepository.findOne({
-        where: {
-          email,
-        } as FindOptionsWhere<User>,
-      });
-      if (!adminUserEntity) {
-        return null;
-      }
-      return true
+    return this.toUser(adminUserEntity);
+  }
+  async getUserByEmail(email: string): Promise<boolean> {
+    const adminUserEntity = await this.userEntityRepository.findOne({
+      where: {
+        email,
+      } as FindOptionsWhere<User>,
+    });
+    if (!adminUserEntity) {
+      return null;
     }
+    return true
+  }
 
   // Validar usuario por correo electrónico
   async validateEmailWithOtp(validateEmailDto: ValidateEmailDto): Promise<boolean> {
@@ -128,21 +132,21 @@ export class DatabaseUserRepository implements UserRepository {
   private toReport(reportEntity: Report): ReportM {
     const trafficLightMInstance: TrafficLightM | null = reportEntity.trafficLight
       ? new TrafficLightM(
-          reportEntity.trafficLight.id,
-          reportEntity.trafficLight.latitude,
-          reportEntity.trafficLight.longitude,
-          reportEntity.trafficLight.type,
-          reportEntity.trafficLight.department,
-          reportEntity.trafficLight.province,
-          reportEntity.trafficLight.district,
-          reportEntity.trafficLight.created_at,
-          reportEntity.trafficLight.updated_at,
-          reportEntity.trafficLight.reports.map((report) => this.toReport(report)),
-        )
+        reportEntity.trafficLight.id,
+        reportEntity.trafficLight.latitude,
+        reportEntity.trafficLight.longitude,
+        reportEntity.trafficLight.type,
+        reportEntity.trafficLight.department,
+        reportEntity.trafficLight.province,
+        reportEntity.trafficLight.district,
+        reportEntity.trafficLight.created_at,
+        reportEntity.trafficLight.updated_at,
+        reportEntity.trafficLight.reports.map((report) => this.toReport(report)),
+      )
       : null;
     //const userInstance = new UserM(reportEntity.user.id)
     const status = Status[reportEntity.status as keyof typeof Status];
-      
+
     return new ReportM(
       reportEntity.id,
       this.toUser(reportEntity.user),
@@ -159,21 +163,21 @@ export class DatabaseUserRepository implements UserRepository {
 
   private toOtp(otpEntity: Otp): OtpM {
     return new OtpM(
-      otpEntity.id, 
-      otpEntity.user.id, 
-      otpEntity.otp_code, 
-      otpEntity.expires_at, 
+      otpEntity.id,
+      otpEntity.user.id,
+      otpEntity.otp_code,
+      otpEntity.expires_at,
       otpEntity.created_at);
   }
 
   private toEvidence(evidenceEntity: Evidence): EvidenceM {
     const fileType = FileType[evidenceEntity.file_type as keyof typeof FileType];
     return new EvidenceM(
-      evidenceEntity.id, 
-      evidenceEntity.file_path, 
+      evidenceEntity.id,
+      evidenceEntity.file_path,
       fileType,
       evidenceEntity.report.id,
       evidenceEntity.uploaded_at,
     );
-}
+  }
 }
