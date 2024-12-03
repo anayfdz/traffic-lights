@@ -6,7 +6,7 @@ import { ExceptionsModule } from './infrastructure/exceptions/exceptions.module'
 import { UsecasesProxyModule } from './infrastructure/usecases-proxy/usecases-proxy.module';
 import { ControllersModule } from './infrastructure/controllers/controllers.module';
 import { BcryptModule } from './infrastructure/services/bcrypt/bcrypt.module';
-import { JwtModule as JwtServiceModule } from './infrastructure/services/jwt/jwt.module';
+import { JwtConfigModule as JwtServiceModule } from './infrastructure/services/jwt/jwt.module';
 import { EnvironmentConfigModule } from './infrastructure/config/environment-config/environment-config.module';
 import { LocalStrategy } from './infrastructure/common/strategies/local.strategy';
 import { JwtStrategy } from './infrastructure/common/strategies/jwt.strategy';

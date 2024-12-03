@@ -10,4 +10,6 @@ export interface UserRepository {
   validateEmailWithOtp(validateEmailDto: ValidateEmailDto): Promise<boolean>
   getUserByUsername(username: string): Promise<UserM>;
   getUserByEmail(email: string): Promise<boolean>;
+  findOneByEmail(email: string): Promise<User | undefined>
+  comparePasswords(plainPassword: string, hashedPassword: string): Promise<boolean>
 }

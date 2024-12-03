@@ -7,9 +7,10 @@ import { OtpService} from './otps/otp.repository'
 import { Otp } from '../entities/otps/otps.entity';
 import { BcryptModule } from '../services/bcrypt/bcrypt.module';
 import { MailModule } from 'src/usecases/otps/mail.module';
+import { JwtConfigModule } from '../services/jwt/jwt.module';
 
 @Module({
-  imports: [TypeOrmConfigModule, TypeOrmModule.forFeature([User, Otp]), MailModule, BcryptModule],
+  imports: [TypeOrmConfigModule, TypeOrmModule.forFeature([User, Otp]), MailModule, BcryptModule, JwtConfigModule],
   providers: [DatabaseUserRepository, OtpService],
   exports: [DatabaseUserRepository, OtpService],
 })

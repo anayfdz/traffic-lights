@@ -9,7 +9,7 @@ import { LoggerService } from '../logger/logger.service';
 
 import { BcryptModule } from '../services/bcrypt/bcrypt.module';
 import { BcryptService } from '../services/bcrypt/bcrypt.service';
-import { JwtModule } from '../services/jwt/jwt.module';
+import { JwtConfigModule } from '../services/jwt/jwt.module';
 import { JwtTokenService } from '../services/jwt/jwt.service';
 import { RepositoriesModule } from '../repositories/repositories.module';
 
@@ -26,7 +26,7 @@ import { ExternalService } from '../repositories/users/external-service/external
 import { ExternalModule } from '../repositories/users/external-service/external.module';
 
 @Module({
-  imports: [LoggerModule, JwtModule, BcryptModule, MailModule, EnvironmentConfigModule, RepositoriesModule, ExceptionsModule, ExternalModule],
+  imports: [LoggerModule, JwtConfigModule, BcryptModule, MailModule, EnvironmentConfigModule, RepositoriesModule, ExceptionsModule, ExternalModule],
 })
 export class UsecasesProxyModule {
   // Auth

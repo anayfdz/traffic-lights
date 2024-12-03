@@ -17,6 +17,8 @@ import { EvidenceM, FileType } from 'src/domain/model/evidences/evidence';
 import { TrafficLightM } from 'src/domain/model/traffic-lights/trafficLight';
 import { ValidateEmailDto } from 'src/infrastructure/common/dto/user/validate-email.dto';
 import { LoginDto } from 'src/infrastructure/common/dto/auth/login.dto';
+import { JwtTokenService } from 'src/infrastructure/services/jwt/jwt.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class DatabaseUserRepository implements UserRepository {
@@ -25,6 +27,8 @@ export class DatabaseUserRepository implements UserRepository {
     private readonly userEntityRepository: Repository<User>,
     private readonly otpService: OtpService,
     private readonly bcryptService: BcryptService,
+    private readonly jwtTokenService: JwtTokenService,
+    private readonly jwtService: JwtService
   ) { }
 
   async registerUser(createUserDto: CreateUserDto): Promise<UserM> {
@@ -69,6 +73,28 @@ export class DatabaseUserRepository implements UserRepository {
   }
 
 
+  // login
+
+  async loginUser(loginDto: LoginDto): Promise<{access_token: string}> {
+    const user = await this.userEntityRepository.findOne({where: {email: loginDto.email}})
+    if (!user){
+      throw new Error('User not found');
+    }
+    const isPasswordValid = await this.bcryptService.compare(loginDto.password, user.password);
+    if (!isPasswordValid) { throw new Error('Invalid credentials'); } 
+    const payload = { email: user.email, sub: user.id }; 
+    const access_token = this.jwtService.sign(payload); 
+    return { access_token };
+  }
+
+  async findOneByEmail(email: string): Promise<User | undefined> { 
+    return this.userEntityRepository.findOne({ where: { email } }); 
+  } 
+    async comparePasswords(plainPassword: string, hashedPassword: string): Promise<boolean> { 
+    return this.bcryptService.compare(plainPassword, hashedPassword); 
+  }
+
+
   async getUserByUsername(username: string): Promise<UserM> {
     const adminUserEntity = await this.userEntityRepository.findOne({
       where: {
@@ -110,6 +136,8 @@ export class DatabaseUserRepository implements UserRepository {
 
     return false;
   }
+
+
 
 
   private toUser(userEntity: User): UserM {

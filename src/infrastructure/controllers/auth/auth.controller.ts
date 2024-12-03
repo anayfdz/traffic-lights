@@ -43,9 +43,16 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiBody({ type: AuthLoginDto })
   @ApiOperation({ description: 'login' })
+  @ApiResponse({ status: 200, description: 'Login successful' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async login(@Body() auth: AuthLoginDto, @Request() request: any) {
-    const accessTokenCookie = await this.loginUsecaseProxy.getInstance().getCookieWithJwtToken(auth.username);
-    const refreshTokenCookie = await this.loginUsecaseProxy.getInstance().getCookieWithJwtRefreshToken(auth.username);
+    const { email, password} = auth;
+    const loginResult = await this.loginUsecaseProxy.getInstance().loginUser(email, password)
+    const { user, token} = loginResult;
+    const accessTokenCookie = await this.loginUsecaseProxy.getInstance().getCookieWithJwtToken(user.email);
+    const refreshTokenCookie = await this.loginUsecaseProxy.getInstance().getCookieWithJwtRefreshToken(user.email);
+    console.log('JWT Cookie:', accessTokenCookie);
+    console.log('Refresh Token Cookie:', refreshTokenCookie);
     request.res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]);
     return 'Login successful';
   }

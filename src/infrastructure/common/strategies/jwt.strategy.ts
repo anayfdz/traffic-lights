@@ -27,11 +27,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    const user = this.loginUsecaseProxy.getInstance().validateUserForJWTStragtegy(payload.username);
-    if (!user) {
-      this.logger.warn('JwtStrategy', `User not found`);
-      this.exceptionService.UnauthorizedException({ message: 'User not found' });
+    if (!payload) {
+      this.logger.warn('LocalStrategy', `Email or password is missing, BadRequestException`);
+      this.exceptionService.UnauthorizedException();
     }
+
+    const user = await this.loginUsecaseProxy.getInstance().validateUserForLocalStragtegy(payload.email, payload.password);
+    if (!user) {
+      this.logger.warn('LocalStrategy', `Invalid username or password`);
+      this.exceptionService.UnauthorizedException({ message: 'Invalid username or password.' });
+    }
+
     return user;
   }
 }
