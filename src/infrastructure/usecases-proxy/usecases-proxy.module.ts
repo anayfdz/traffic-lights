@@ -24,6 +24,9 @@ import { RegisterUserUseCase } from 'src/usecases/user/register-user.usecases';
 import { ValidateEmailUsecases } from 'src/usecases/user/validate-email.usecases';
 import { ExternalService } from '../repositories/users/external-service/external.service';
 import { ExternalModule } from '../repositories/users/external-service/external.module';
+import { DatabaseReportRepository } from '../repositories/reports/report.repository';
+import { ReportTrafficLightUseCase } from 'src/usecases/reports/create-report-traffic-light.usecase';
+import { DatabaseTrafficLightRepository } from '../repositories/traffic-lights/traffic.repository';
 
 @Module({
   imports: [LoggerModule, JwtConfigModule, BcryptModule, MailModule, EnvironmentConfigModule, RepositoriesModule, ExceptionsModule, ExternalModule],
@@ -40,6 +43,9 @@ export class UsecasesProxyModule {
 
   // mail 
   static MAIL_SERVICE = 'MailModule';
+
+  // report
+  static ReportTrafficLightUseCaseProxy = 'ReportTrafficLightUseCaseProxy';
 
   static register(): DynamicModule {
     return {
@@ -88,6 +94,12 @@ export class UsecasesProxyModule {
           provide: UsecasesProxyModule.MAIL_SERVICE,
           useFactory: () => new UseCaseProxy(new MailModule()),
         },
+        // Report 
+        {
+          inject: [DatabaseReportRepository, DatabaseTrafficLightRepository],
+          provide: UsecasesProxyModule.ReportTrafficLightUseCaseProxy,
+          useFactory: (reportRepo: DatabaseReportRepository, trafficLight: DatabaseTrafficLightRepository) => new UseCaseProxy(new ReportTrafficLightUseCase(reportRepo, trafficLight)),
+        },
       ],
       exports: [
         UsecasesProxyModule.RESEND_USECASES_PROXY,
@@ -97,6 +109,7 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.MAIL_SERVICE,
         UsecasesProxyModule.REGISTER_USECASES_PROXY,
         UsecasesProxyModule.VALIDATE_USECASES_EMAIL_PROXY,
+        UsecasesProxyModule.ReportTrafficLightUseCaseProxy,
       ],
     };
   }

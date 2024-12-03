@@ -43,5 +43,61 @@ export class TrafficLightM {
   set id(value: number) {
     this._id = value;
   }
+  get latitude(): number {
+    return this._latitude;
+  }
+  set latitude(value: number) {
+    this._latitude = value;
+  }
 
+  get longitude(): number {
+    return this._longitude;
+  }
+  set longitude(value: number) {
+    this._longitude = value;
+  }
+  get type(): string {
+    return this._type;
+  }
+  set type(value: string) {
+    this._type = value;
+  }
+  get department(): string {
+    return this._department;
+  }
+  set department(value: string) {
+    this._department = value;
+  }
+  get province(): string {
+    return this._province;
+  }
+  set province(value: string) {
+    this._province = value;
+  }
+  get district(): string {
+    return this._district;
+  }
+
+  set district(value: string) {
+    this._district = value;
+  }
+
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+  set createdAt(value: Date) {
+    this._createdAt = value;
+  }
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+  set updatedAt(value: Date) {
+    this._updatedAt = value;
+  }
+  get reports(): ReportM[] {
+    return this._reports;
+  }
+  set reports(value: ReportM[]) {
+    this._reports = value;
+  }
 }

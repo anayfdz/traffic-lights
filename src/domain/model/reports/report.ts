@@ -55,4 +55,43 @@ export class ReportM {
   set id(value: number) {
     this._id = value;
   }
+
+  get status(): Status {
+    return this._status;
+  }
+
+  set status(value: Status) {
+    this._status = value;
+  }
+  get comments(): string | null {
+    return this._comments;
+  }
+
+  set comments(value: string | null) {
+    this._comments = value;
+  }
+  get reported_at(): Date {
+    return this._reported_at;
+  }
+  set reported_at(value: Date) {
+    this._reported_at = value;
+  }
+  get description(): string {
+    return this._description;
+  }
+  set description(value: string) {
+    this.description = value;
+  }
+  get evidences(): EvidenceM[] {
+    return this._evidences;
+  }
+  set evidences(value: EvidenceM[]) {
+    this._evidences = value;
+  }
+  get updated_at(): Date {
+    return this._updated_at;
+  }
+  set updated_at(value: Date) {
+    this.updated_at = value;
+  }
 }

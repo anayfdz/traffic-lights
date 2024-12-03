@@ -53,4 +53,10 @@ export class EvidenceM {
   set reportId(value: number) {
     this._reportId = value;
   }
+  get uploadedAt(): Date {
+    return this._uploaded_at;
+  }
+  set uploadedAt(value: Date) {
+    this._uploaded_at = value;
+  }
 }
