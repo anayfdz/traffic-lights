@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Post, Query, Request, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Query, Request, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ReportTrafficLightDto } from '../../common/dto/traffic-lights/report-traffic-light.dto';
 import { FilterTrafficLightsDto } from '../../common/dto/traffic-lights/filter-traffic-lights.dto';
 import { NearbyTrafficLightsDto } from '../../common/dto/traffic-lights/nearby-traffic-lights.dto';
@@ -9,6 +9,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { CreateReportDto } from 'src/infrastructure/common/dto/report/create-report.dto';
 import * as path from 'path';
+import { JwtAuthGuard } from 'src/infrastructure/common/guards/jwtAuth.guard';
 @Controller('api')
 export class TrafficLightController {
     constructor(
@@ -29,6 +30,7 @@ export class TrafficLightController {
             }),
         }),
     )
+    @UseGuards(JwtAuthGuard)
     async reportTrafficLight(
         @Body() createReportDto: CreateReportDto,
         @Request() req: any,
