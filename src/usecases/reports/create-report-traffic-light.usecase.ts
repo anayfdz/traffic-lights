@@ -10,12 +10,15 @@ import { ReportM, Status } from 'src/domain/model/reports/report';
 import { Evidence } from 'src/infrastructure/entities/evidences/evidences.entity';
 import { UserM } from 'src/domain/model/users/user';
 import { EvidenceM, FileType } from 'src/domain/model/evidences/evidence';
+import { CreateTrafficLightDto } from 'src/infrastructure/common/dto/traffic-lights/create-traffic-light.dto';
+import { CreateTrafficLightUseCase } from '../traffic-lights/create-traffic-light.usecase';
 
 @Injectable()
 export class ReportTrafficLightUseCase {
   constructor(
     private readonly reportRepository: IReportRepository,
     private readonly trafficLightRepository: ITrafficLightRepository,
+    private readonly createTrafficLightUseCase: CreateTrafficLightUseCase,
   ) { }
 
   async execute(userId: number, createReportDto: CreateReportDto): Promise<ReportM> {
@@ -25,18 +28,31 @@ export class ReportTrafficLightUseCase {
       if (!trafficLight) {
         throw new NotFoundException('Traffic Light not found');
       }
+    } else {
+      const createTrafficLightDto = new CreateTrafficLightDto();
+      createTrafficLightDto.latitude = createTrafficLightDto.latitude,
+      createTrafficLightDto.longitude = createTrafficLightDto.longitude,
+      createTrafficLightDto.type = createTrafficLightDto.type,
+      createTrafficLightDto.department = createTrafficLightDto.department,
+      createTrafficLightDto.province = createTrafficLightDto.province,
+      createTrafficLightDto.district = createTrafficLightDto.district,
+      trafficLight = await this.createTrafficLightUseCase.execute(createTrafficLightDto);
+      if (!trafficLight) {
+        throw new Error('Error creating traffic light');
+      }
     }
     const status = createReportDto.status;
+
     const reportM = new ReportM(
       null,
       { id: userId } as UserM,
-      trafficLight ? trafficLight: null,
+      trafficLight,
       createReportDto.description,
       status,
       createReportDto.comments,
       createReportDto.reported_at || new Date(),
     );
-    
+
 
     // si hay evidencias las creamos
     if (createReportDto.evidences && createReportDto.evidences.length > 0) {

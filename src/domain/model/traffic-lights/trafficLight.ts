@@ -1,5 +1,10 @@
 import { ReportM } from "../reports/report";
 
+export type Location = {
+  latitude: number;
+  longitude: number;
+};
+
 export class TrafficLightM {
   private _id: number;
   private _latitude: number;
@@ -8,6 +13,7 @@ export class TrafficLightM {
   private _department: string;
   private _province: string;
   private _district: string;
+  private _location: Location;
   private _createdAt: Date;
   private _updatedAt: Date;
   private _reports: ReportM[];
@@ -20,6 +26,7 @@ export class TrafficLightM {
     department: string,
     province: string,
     district: string,
+    location: Location,
     createdAt: Date = new Date(),
     updatedAt: Date = new Date(),
     reports: ReportM[] = []
@@ -31,6 +38,7 @@ export class TrafficLightM {
     this._department = department;
     this._province = province;
     this._district = district;
+    this._location = location;
     this._createdAt = createdAt;
     this._updatedAt = updatedAt;
     this._reports = reports;
@@ -80,6 +88,14 @@ export class TrafficLightM {
 
   set district(value: string) {
     this._district = value;
+  }
+
+  get location(): Location {
+    return this._location;
+  }
+
+  set location(value: Location) {
+    this._location = value;
   }
 
   get createdAt(): Date {

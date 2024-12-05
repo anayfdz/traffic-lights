@@ -40,10 +40,12 @@ export class UserController {
     return {message: 'Correo electrónico validado con éxito.'}
   }
 
-  // @Post('login') 
-  // async login(@Body() loginDto: LoginDto) { 
-  //   return this.userService.login(loginDto); 
-  // } 
+  // ver reporte de usuario
+  // @Get('reports')
+  // @UseGuards(JwtAuthGuard)
+  // async getUserReports(@Request() req) {
+  //   return await this.trafficLightService.getUserReports(req.user.id);
+  // }
   //   @Post('logout') async logout() { 
   //     return this.userService.logout(); 
   //   }

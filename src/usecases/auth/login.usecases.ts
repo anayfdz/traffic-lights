@@ -81,6 +81,9 @@ export class LoginUseCases {
     if (!user) {
       return null;
     }
+    if (!user.password) {
+      throw new Error('Contraseña no encontrada para el usuario');
+    }
     const match = await this.bcryptService.compare(pass, user.password);
     if (!match) {
       return null;  // Si la contraseña no coincide, devolvemos null

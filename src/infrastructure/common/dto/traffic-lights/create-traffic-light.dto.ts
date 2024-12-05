@@ -1,3 +1,4 @@
+import { Location } from '../../../../domain/model/traffic-lights/trafficLight'
 export class CreateTrafficLightDto { 
     latitude: number; 
     longitude: number; 
@@ -5,4 +6,5 @@ export class CreateTrafficLightDto {
     department: string; 
     province: string; 
     district: string;
+    location: Location;
 }

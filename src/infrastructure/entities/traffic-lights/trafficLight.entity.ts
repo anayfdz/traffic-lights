@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn, Point } from 'typeorm';
 import { Report } from '../reports/report.entity'
 
 @Entity('traffic_lights')
@@ -23,6 +23,9 @@ export class TrafficLight {
 
   @Column('varchar', { length: 255, nullable: true })
   district: string;
+  
+  @Column('geometry', { nullable: true, spatialFeatureType: 'Point', srid: 4326 })
+  location: Point;
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

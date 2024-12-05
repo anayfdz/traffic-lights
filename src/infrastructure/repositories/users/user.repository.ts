@@ -158,6 +158,12 @@ export class DatabaseUserRepository implements UserRepository {
   }
 
   private toReport(reportEntity: Report): ReportM {
+    const location = reportEntity.trafficLight && reportEntity.trafficLight.location
+    ? {
+        latitude: reportEntity.trafficLight.location.coordinates[1],
+        longitude: reportEntity.trafficLight.location.coordinates[0]
+      }
+    : { latitude: 0, longitude: 0 };
     const trafficLightMInstance: TrafficLightM | null = reportEntity.trafficLight
       ? new TrafficLightM(
         reportEntity.trafficLight.id,
@@ -167,6 +173,7 @@ export class DatabaseUserRepository implements UserRepository {
         reportEntity.trafficLight.department,
         reportEntity.trafficLight.province,
         reportEntity.trafficLight.district,
+        location,
         reportEntity.trafficLight.created_at,
         reportEntity.trafficLight.updated_at,
         reportEntity.trafficLight.reports.map((report) => this.toReport(report)),

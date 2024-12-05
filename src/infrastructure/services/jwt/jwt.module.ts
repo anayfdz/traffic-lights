@@ -6,7 +6,7 @@ import { JwtTokenService } from './jwt.service';
   imports: [NestJwtModule.registerAsync({
     useFactory: () => ({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: process.env.JWT_EXPIRATION_TIME || '60m', },
+      signOptions: { expiresIn: process.env.JWT_EXPIRATION_TIME || '72h', },
     }
   )
   }),

@@ -93,6 +93,11 @@ constructor(
   }
 
   private toReportM(reportEntity: Report): ReportM {
+    const location =reportEntity.trafficLight && reportEntity.trafficLight.location ?
+    {
+      latitude: reportEntity.trafficLight.location.coordinates[1],
+      longitude: reportEntity.trafficLight.location.coordinates[0]
+    } : { latitude: 0, longitude: 0 };
     const trafficLightMInstance: TrafficLightM | null = reportEntity.trafficLight
       ? new TrafficLightM(
           reportEntity.trafficLight.id,
@@ -102,6 +107,7 @@ constructor(
           reportEntity.trafficLight.department,
           reportEntity.trafficLight.province,
           reportEntity.trafficLight.district,
+          location,
           reportEntity.trafficLight.created_at,
           reportEntity.trafficLight.updated_at,
           [],

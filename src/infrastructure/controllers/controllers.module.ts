@@ -8,9 +8,10 @@ import { OtpModule } from '../repositories/otps/otp.module';
 import { UserModule } from '../repositories/users/user.module';
 import { UserCasesModule } from 'src/usecases/user/user-cases.module';
 import { TrafficLightController } from './traffic-lights/traffic-light.controller';
+import { AdminController } from './admin-users/admin.controller';
 
 @Module({
   imports: [UsecasesProxyModule.register(), OtpModule, UserModule, UserCasesModule],
-  controllers: [AuthController, OtpController, UserController, TrafficLightController],
+  controllers: [AuthController, OtpController, UserController, TrafficLightController, AdminController],
 })
 export class ControllersModule {}

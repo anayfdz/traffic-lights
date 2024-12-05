@@ -7,4 +7,5 @@ export interface ITrafficLightRepository {
   filter(department?: string, province?: string, district?: string): Promise<TrafficLightM[]>;
   update(trafficLight: TrafficLightM): Promise<TrafficLightM>;
   delete(id: number): Promise<void>;
+  save(trafficLight: TrafficLightM): Promise<TrafficLightM>;
 }

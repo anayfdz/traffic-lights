@@ -27,9 +27,11 @@ import { ExternalModule } from '../repositories/users/external-service/external.
 import { DatabaseReportRepository } from '../repositories/reports/report.repository';
 import { ReportTrafficLightUseCase } from 'src/usecases/reports/create-report-traffic-light.usecase';
 import { DatabaseTrafficLightRepository } from '../repositories/traffic-lights/traffic.repository';
+import { CreateTrafficLightUseCase } from 'src/usecases/traffic-lights/create-traffic-light.usecase';
+import { TrafficUseCasesModule } from 'src/usecases/traffic-lights/traffic.module';
 
 @Module({
-  imports: [LoggerModule, JwtConfigModule, BcryptModule, MailModule, EnvironmentConfigModule, RepositoriesModule, ExceptionsModule, ExternalModule],
+  imports: [LoggerModule, JwtConfigModule, BcryptModule, MailModule, EnvironmentConfigModule, RepositoriesModule, ExceptionsModule, ExternalModule, TrafficUseCasesModule],
 })
 export class UsecasesProxyModule {
   // Auth
@@ -46,6 +48,9 @@ export class UsecasesProxyModule {
 
   // report
   static ReportTrafficLightUseCaseProxy = 'ReportTrafficLightUseCaseProxy';
+
+  // trafic
+  static CreateTrafficLightUseCaseProxy = 'CreateTrafficLightUseCaseProxy'
 
   static register(): DynamicModule {
     return {
@@ -96,10 +101,17 @@ export class UsecasesProxyModule {
         },
         // Report 
         {
-          inject: [DatabaseReportRepository, DatabaseTrafficLightRepository],
+          inject: [DatabaseReportRepository, DatabaseTrafficLightRepository, CreateTrafficLightUseCase],
           provide: UsecasesProxyModule.ReportTrafficLightUseCaseProxy,
-          useFactory: (reportRepo: DatabaseReportRepository, trafficLight: DatabaseTrafficLightRepository) => new UseCaseProxy(new ReportTrafficLightUseCase(reportRepo, trafficLight)),
+          useFactory: (reportRepo: DatabaseReportRepository, trafficLight: DatabaseTrafficLightRepository, createTrafficLightUseCase: CreateTrafficLightUseCase) => new UseCaseProxy(new ReportTrafficLightUseCase(reportRepo, trafficLight, createTrafficLightUseCase)),
         },
+        // traffic
+        {
+          inject: [DatabaseTrafficLightRepository],
+          provide: UsecasesProxyModule.CreateTrafficLightUseCaseProxy,
+          useFactory: (trafficLight: DatabaseTrafficLightRepository) => new UseCaseProxy(new CreateTrafficLightUseCase(trafficLight)),
+        },
+
       ],
       exports: [
         UsecasesProxyModule.RESEND_USECASES_PROXY,
@@ -110,6 +122,7 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.REGISTER_USECASES_PROXY,
         UsecasesProxyModule.VALIDATE_USECASES_EMAIL_PROXY,
         UsecasesProxyModule.ReportTrafficLightUseCaseProxy,
+        UsecasesProxyModule.CreateTrafficLightUseCaseProxy,
       ],
     };
   }

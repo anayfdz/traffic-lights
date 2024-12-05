@@ -10,13 +10,11 @@ export class RegisterUserUseCase {
 
   async execute(createUserDto: CreateUserDto): Promise<UserM> {
     const dniInfo = await this.externalService.getDniInfo(createUserDto.dni);
-    console.log(dniInfo, 'en el caso de uso')
     if(!dniInfo || !dniInfo.nombres || !dniInfo.apellidoPaterno || !dniInfo.apellidoMaterno) {
       throw new Error('No se pudo obtener la información del DNI');
     }
     const name = dniInfo.nombres.trim();
     const lastName = (dniInfo.apellidoPaterno || '') + ' ' + (dniInfo.apellidoMaterno || '');
-      console.log(lastName, 'el supuesto nulo')
     const newUser = await this.userRepository.registerUser({ 
       ...createUserDto, 
       name,

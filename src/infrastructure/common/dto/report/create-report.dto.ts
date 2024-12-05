@@ -7,14 +7,17 @@ import { Status } from 'src/domain/model/reports/report';
 export class CreateReportDto {
   @ApiProperty({ required: false })
   @IsOptional()
+  @Transform(({ value }) => parseInt(value, 10))
   @IsInt()
   traffic_light_id?: number;
 
   @ApiProperty()
+  @Transform(({ value }) => parseFloat(value))
   @IsNumber()
   latitude: number;
 
   @ApiProperty()
+  @Transform(({ value }) => parseFloat(value))
   @IsNumber()
   longitude: number;
 
