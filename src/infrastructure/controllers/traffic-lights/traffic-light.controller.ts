@@ -2,21 +2,23 @@ import { Body, Controller, Get, Inject, Post, Query, Request, UploadedFile, Uplo
 import { UsecasesProxyModule } from 'src/infrastructure/usecases-proxy/usecases-proxy.module';
 import { ReportTrafficLightUseCase } from 'src/usecases/reports/create-report-traffic-light.usecase';
 import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases-proxy';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { CreateReportDto } from 'src/infrastructure/common/dto/report/create-report.dto';
 import * as path from 'path';
 import { JwtAuthGuard } from 'src/infrastructure/common/guards/jwtAuth.guard';
+import { CreateTrafficLightDto } from 'src/infrastructure/common/dto/traffic-lights/create-traffic-light.dto';
+import { AdminGuard } from 'src/infrastructure/common/guards/Admin.guard';
 @Controller('api')
 export class TrafficLightController {
   constructor(
     @Inject(UsecasesProxyModule.ReportTrafficLightUseCaseProxy)
     private readonly reportTrafficLightUseCase: UseCaseProxy<ReportTrafficLightUseCase>,
   ) {}
-// reporte de semaforo
+
   @Post('traffic-lights/report')
   @UseInterceptors(
-    FileInterceptor('evidences', {
+    FilesInterceptor('evidences', 10, {
       storage: diskStorage({
         destination: './uploads',
         filename: (req, file, cb) => {
@@ -32,22 +34,26 @@ export class TrafficLightController {
     @Request() req: any,
     @UploadedFiles() evidence: Express.Multer.File[],
   ) {
+    console.log('evidencias subidas',evidence );
+    if (!evidence || evidence.length === 0) {
+      return { message: 'No se recibieron evidencias' };
+    }
     const userId = req.user.id;
     console.log('user', userId);
 
-    // Si se ha subido un archivo de evidencia, lo procesamos
+    createReportDto.evidences = createReportDto.evidences || [];
+    console.log('Evidencias en DTO antes de procesar:', createReportDto.evidences)
+    
     if (evidence && evidence.length > 0) {
-        createReportDto.evidences = createReportDto.evidences || [];
-        // Agregar las rutas de los archivos subidos al DTO
-      evidence.forEach((file) => {
-        const filePath = path.join('uploads', file.filename);
-        createReportDto.evidences.push(filePath);
-      });;
+      const evidencePaths = evidence.map((file) => ({
+        filePath: path.join('uploads', file.filename),
+        fileType: 'image'
+      }))
+      createReportDto.evidences.push(...evidencePaths);
     }
 
     const reportUseCase = this.reportTrafficLightUseCase.getInstance();
     const createdReport = await reportUseCase.execute(userId, createReportDto);
-
     return { message: 'Reporte creado con éxito', createdReport };
   }
 
@@ -65,13 +71,12 @@ export class TrafficLightController {
   // async getNearbyTrafficLights(@Query() nearbyTrafficLightsDto: NearbyTrafficLightsDto) {
   //     return this.trafficLightService.getNearbyTrafficLights(nearbyTrafficLightsDto);
   // }
-  // crear semaforo solo admis
-  // @Post()
-  // @UseGuards(JwtAuthGuard, RolesGuard)  // Verifica JWT y roles
-  // @Roles('admin')  // Solo los administradores pueden acceder
-  // async create(@Body() createTrafficLightDto: CreateTrafficLightDto) {
-  //   return await this.trafficLightService.create(createTrafficLightDto);
-  // }
+ 
+  @Post()
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  async create(@Body() createTrafficLightDto: CreateTrafficLightDto) {
+    //return await this.trafficLightService.create(createTrafficLightDto);
+  }
 
   // actualizar semaforo solo admin
   // @Put(':id')

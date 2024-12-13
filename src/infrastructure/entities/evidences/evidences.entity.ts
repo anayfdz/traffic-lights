@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Report } from '../reports/report.entity';
+import { FileType } from 'src/domain/model/evidences/evidence';
 
 @Entity('evidences')
 export class Evidence {
@@ -13,8 +14,8 @@ export class Evidence {
   @Column('text')
   file_path: string;
 
-  @Column({ type: 'enum', enum: ['image', 'video'] })
-  file_type: string;
+  @Column({ type: 'enum', enum: FileType })
+  file_type: FileType;
 
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' }) 
   uploaded_at: Date;

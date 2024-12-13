@@ -1,17 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/infrastructure/entities/users/user.entity';
-import { Report } from 'src/infrastructure/entities/reports/report.entity';
-import { Repository } from 'typeorm';
 import { CreateReportDto } from 'src/infrastructure/common/dto/report/create-report.dto';
 import { IReportRepository } from 'src/domain/repositories/reports/reportRepository.interface';
 import { ITrafficLightRepository } from 'src/domain/repositories/traffic-lights/trafficLightRepository.interface';
 import { ReportM, Status } from 'src/domain/model/reports/report';
-import { Evidence } from 'src/infrastructure/entities/evidences/evidences.entity';
 import { UserM } from 'src/domain/model/users/user';
-import { EvidenceM, FileType } from 'src/domain/model/evidences/evidence';
 import { CreateTrafficLightDto } from 'src/infrastructure/common/dto/traffic-lights/create-traffic-light.dto';
 import { CreateTrafficLightUseCase } from '../traffic-lights/create-traffic-light.usecase';
+import { CreateEvidenceUseCase } from '../evidences/createEvidences.usecases';
 
 @Injectable()
 export class ReportTrafficLightUseCase {
@@ -19,6 +15,7 @@ export class ReportTrafficLightUseCase {
     private readonly reportRepository: IReportRepository,
     private readonly trafficLightRepository: ITrafficLightRepository,
     private readonly createTrafficLightUseCase: CreateTrafficLightUseCase,
+    private readonly createEvidenceUseCase: CreateEvidenceUseCase
   ) { }
 
   async execute(userId: number, createReportDto: CreateReportDto): Promise<ReportM> {
@@ -30,16 +27,24 @@ export class ReportTrafficLightUseCase {
       }
     } else {
       const createTrafficLightDto = new CreateTrafficLightDto();
-      createTrafficLightDto.latitude = createTrafficLightDto.latitude,
-      createTrafficLightDto.longitude = createTrafficLightDto.longitude,
-      createTrafficLightDto.type = createTrafficLightDto.type,
+      createTrafficLightDto.latitude = createReportDto.latitude,
+      createTrafficLightDto.longitude = createReportDto.longitude,
+      createTrafficLightDto.type = createReportDto.type,
       createTrafficLightDto.department = createTrafficLightDto.department,
-      createTrafficLightDto.province = createTrafficLightDto.province,
-      createTrafficLightDto.district = createTrafficLightDto.district,
-      trafficLight = await this.createTrafficLightUseCase.execute(createTrafficLightDto);
-      if (!trafficLight) {
-        throw new Error('Error creating traffic light');
+      createTrafficLightDto.province = createReportDto.province,
+      createTrafficLightDto.district = createReportDto.district,
+
+      console.log('Creando semáforo con estos datos:', createTrafficLightDto);
+      try {
+        trafficLight = await this.createTrafficLightUseCase.execute(createTrafficLightDto);
+        if (!trafficLight) {
+          throw new Error('Error creating traffic light');
+        }
+      } catch (err) {
+        console.error('Error al crear semáforo:', err);
+        throw new Error('Error al crear semáforo');
       }
+     
     }
     const status = createReportDto.status;
 
@@ -53,26 +58,21 @@ export class ReportTrafficLightUseCase {
       createReportDto.reported_at || new Date(),
     );
 
+    const savedReport = await this.reportRepository.createReport(reportM)
 
     // si hay evidencias las creamos
     if (createReportDto.evidences && createReportDto.evidences.length > 0) {
-      reportM.evidences = createReportDto.evidences.map((evidencePath) => {
-        const evidenceM = new EvidenceM(
-          0,
-          evidencePath,
-          FileType.Image,
-          0,
-          new Date(),
-          new Date(),
-        );
-        return evidenceM;
-      });
+      const filePaths = createReportDto.evidences.map((evidencePath) => evidencePath.filePath);
+      const fileTypes = createReportDto.evidences.map((evidencesPath) => evidencesPath.fileType)
+      const savedEvidences = await this.createEvidenceUseCase.execute(filePaths, fileTypes, savedReport.id);
+      console.log('aqui las evidencias a guardar', savedEvidences);
+      reportM.evidences = savedEvidences;
     }
     try {
-      const savedReport = await this.reportRepository.createReport(reportM)
       return savedReport
     } catch (err) {
-      console.log('error en la creacion del reporte', err)
+      console.log('error en la creacion del reporte', err);
+      throw new Error('Error al crear el reporte');
     }
   }
 }

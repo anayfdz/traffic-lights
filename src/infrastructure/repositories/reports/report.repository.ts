@@ -115,7 +115,9 @@ constructor(
       : null;
 
     const status = Status[reportEntity.status as keyof typeof Status];
-    const evidences = reportEntity.evidences.map(evidenceEntity => this.toEvidence(evidenceEntity));
+    const evidences = reportEntity.evidences?.map(evidenceEntity => this.toEvidence(evidenceEntity)) || [];
+    console.log(evidences, 'aqui arreglo')
+
     return new ReportM(
       reportEntity.id,
       this.toUser(reportEntity.user),
@@ -126,7 +128,7 @@ constructor(
       reportEntity.reported_at,
       reportEntity.created_at,
       reportEntity.updated_at,
-      reportEntity.evidences.map((evidence) => this.toEvidence(evidence)),
+      evidences
     );
   }
 
@@ -146,7 +148,7 @@ constructor(
   }
 
   private toEvidence(evidenceEntity: Evidence): EvidenceM {
-    const fileType = FileType[evidenceEntity.file_type as keyof typeof FileType];
+    const fileType = this.convertToFileType(evidenceEntity.file_type);
     return new EvidenceM(
       evidenceEntity.id,
       evidenceEntity.file_path,
@@ -154,5 +156,12 @@ constructor(
       evidenceEntity.report.id,
       evidenceEntity.uploaded_at,
     );
+  }
+  private convertToFileType(fileType: string): FileType {
+    if (Object.values(FileType).includes(fileType as FileType)) {
+      return fileType as FileType;
+    } else {
+      throw new Error(`Invalid file type: ${fileType}`);
+    }
   }
 }

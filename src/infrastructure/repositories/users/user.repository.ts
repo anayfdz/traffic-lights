@@ -206,7 +206,7 @@ export class DatabaseUserRepository implements UserRepository {
   }
 
   private toEvidence(evidenceEntity: Evidence): EvidenceM {
-    const fileType = FileType[evidenceEntity.file_type as keyof typeof FileType];
+    const fileType = this.convertToFileType(evidenceEntity.file_type)
     return new EvidenceM(
       evidenceEntity.id,
       evidenceEntity.file_path,
@@ -214,5 +214,12 @@ export class DatabaseUserRepository implements UserRepository {
       evidenceEntity.report.id,
       evidenceEntity.uploaded_at,
     );
+  }
+  private convertToFileType(fileType: string): FileType {
+    if (Object.values(FileType).includes(fileType as FileType)) {
+      return fileType as FileType;
+    } else {
+      throw new Error(`Invalid file type: ${fileType}`);
+    }
   }
 }

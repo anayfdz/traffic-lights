@@ -17,6 +17,19 @@ export class CreateReportDto {
   latitude: number;
 
   @ApiProperty()
+  @IsString()
+  type: string;
+
+  @ApiProperty()
+  @IsString()
+  province: string;
+
+  
+  @ApiProperty()
+  @IsString()
+  district: string;
+
+  @ApiProperty()
   @Transform(({ value }) => parseFloat(value))
   @IsNumber()
   longitude: number;
@@ -39,8 +52,8 @@ export class CreateReportDto {
   @IsDate()
   reported_at?: Date;
 
-  @ApiProperty({ type: [String] })
+  @ApiProperty({ type: [Object] })
   @IsArray()
   @IsOptional()
-  evidences: string[];
+  evidences: { filePath: string, fileType: string }[];
 }

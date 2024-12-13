@@ -29,9 +29,23 @@ import { ReportTrafficLightUseCase } from 'src/usecases/reports/create-report-tr
 import { DatabaseTrafficLightRepository } from '../repositories/traffic-lights/traffic.repository';
 import { CreateTrafficLightUseCase } from 'src/usecases/traffic-lights/create-traffic-light.usecase';
 import { TrafficUseCasesModule } from 'src/usecases/traffic-lights/traffic.module';
+import { EvidencesUseCasesModule } from 'src/usecases/evidences/evidence-usecases.module';
+import { DatabaseEvidenceRepository } from '../repositories/evidences/evidence.repository';
+import { CreateEvidenceUseCase } from 'src/usecases/evidences/createEvidences.usecases';
 
 @Module({
-  imports: [LoggerModule, JwtConfigModule, BcryptModule, MailModule, EnvironmentConfigModule, RepositoriesModule, ExceptionsModule, ExternalModule, TrafficUseCasesModule],
+  imports: [
+    LoggerModule,
+    JwtConfigModule,
+    BcryptModule,
+    MailModule,
+    EnvironmentConfigModule,
+    RepositoriesModule,
+    ExceptionsModule,
+    ExternalModule,
+    TrafficUseCasesModule,
+    EvidencesUseCasesModule,
+  ],
 })
 export class UsecasesProxyModule {
   // Auth
@@ -41,16 +55,18 @@ export class UsecasesProxyModule {
   // Users
   static RESEND_USECASES_PROXY = 'ResendOtpUsecasesProxy';
   static REGISTER_USECASES_PROXY = 'RegisterUseCasesProxy';
-  static VALIDATE_USECASES_EMAIL_PROXY = 'ValidateEmailUsecasesProxy'
+  static VALIDATE_USECASES_EMAIL_PROXY = 'ValidateEmailUsecasesProxy';
 
-  // mail 
+  // mail
   static MAIL_SERVICE = 'MailModule';
 
   // report
   static ReportTrafficLightUseCaseProxy = 'ReportTrafficLightUseCaseProxy';
 
   // trafic
-  static CreateTrafficLightUseCaseProxy = 'CreateTrafficLightUseCaseProxy'
+  static CreateTrafficLightUseCaseProxy = 'CreateTrafficLightUseCaseProxy';
+  // evidence
+  static EvidencesUseCasesProxy = 'EvidencesUseCasesProxy';
 
   static register(): DynamicModule {
     return {
@@ -86,7 +102,8 @@ export class UsecasesProxyModule {
         {
           inject: [DatabaseUserRepository, ExternalService],
           provide: UsecasesProxyModule.REGISTER_USECASES_PROXY,
-          useFactory: (userRepo: DatabaseUserRepository, externalService: ExternalService) => new UseCaseProxy(new RegisterUserUseCase(userRepo, externalService)),
+          useFactory: (userRepo: DatabaseUserRepository, externalService: ExternalService) =>
+            new UseCaseProxy(new RegisterUserUseCase(userRepo, externalService)),
         },
         {
           inject: [DatabaseUserRepository],
@@ -99,19 +116,33 @@ export class UsecasesProxyModule {
           provide: UsecasesProxyModule.MAIL_SERVICE,
           useFactory: () => new UseCaseProxy(new MailModule()),
         },
-        // Report 
+        // Report
         {
-          inject: [DatabaseReportRepository, DatabaseTrafficLightRepository, CreateTrafficLightUseCase],
+          inject: [DatabaseReportRepository, DatabaseTrafficLightRepository, CreateTrafficLightUseCase, CreateEvidenceUseCase],
           provide: UsecasesProxyModule.ReportTrafficLightUseCaseProxy,
-          useFactory: (reportRepo: DatabaseReportRepository, trafficLight: DatabaseTrafficLightRepository, createTrafficLightUseCase: CreateTrafficLightUseCase) => new UseCaseProxy(new ReportTrafficLightUseCase(reportRepo, trafficLight, createTrafficLightUseCase)),
+          useFactory: (
+            reportRepo: DatabaseReportRepository,
+            trafficLight: DatabaseTrafficLightRepository,
+            createTrafficLightUseCase: CreateTrafficLightUseCase,
+            createEvidenceUseCase: CreateEvidenceUseCase,
+          ) =>
+            new UseCaseProxy(
+              new ReportTrafficLightUseCase(reportRepo, trafficLight, createTrafficLightUseCase, createEvidenceUseCase),
+            ),
         },
         // traffic
         {
           inject: [DatabaseTrafficLightRepository],
           provide: UsecasesProxyModule.CreateTrafficLightUseCaseProxy,
-          useFactory: (trafficLight: DatabaseTrafficLightRepository) => new UseCaseProxy(new CreateTrafficLightUseCase(trafficLight)),
+          useFactory: (trafficLight: DatabaseTrafficLightRepository) =>
+            new UseCaseProxy(new CreateTrafficLightUseCase(trafficLight)),
         },
-
+        // evidence
+        {
+          inject: [DatabaseEvidenceRepository],
+          provide: UsecasesProxyModule.EvidencesUseCasesProxy,
+          useFactory: () => new UseCaseProxy(new EvidencesUseCasesModule()),
+        },
       ],
       exports: [
         UsecasesProxyModule.RESEND_USECASES_PROXY,
@@ -123,6 +154,7 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.VALIDATE_USECASES_EMAIL_PROXY,
         UsecasesProxyModule.ReportTrafficLightUseCaseProxy,
         UsecasesProxyModule.CreateTrafficLightUseCaseProxy,
+        UsecasesProxyModule.EvidencesUseCasesProxy,
       ],
     };
   }
