@@ -2,6 +2,7 @@ export interface IJwtServicePayload {
   username?: string;
   email: string;
   sub: number;
+  role?: string;
 }
 
 export interface IJwtService {

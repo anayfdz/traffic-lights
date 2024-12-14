@@ -2,11 +2,14 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { Roles } from 'src/domain/model/admin-users/adminUser';
+import { JwtAuthGuard } from './jwtAuth.guard';
 
 
 @Injectable()
-export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+export class RolesGuard extends JwtAuthGuard implements CanActivate {
+  constructor(private reflector: Reflector) {
+    super();
+  }
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const requiredRoles = this.reflector.get<Roles[]>('roles', context.getHandler());

@@ -15,10 +15,12 @@ import { TrafficLight } from '../entities/traffic-lights/trafficLight.entity';
 import { Report } from '../entities/reports/report.entity';
 import { Evidence } from '../entities/evidences/evidences.entity';
 import { DatabaseEvidenceRepository } from './evidences/evidence.repository';
+import { DatabaseAdminUserRepository } from './admin-users/admin.repository';
+import { AdminUser } from '../entities/admin-users/adminUser.entity';
 
 @Module({
-  imports: [TypeOrmConfigModule, TypeOrmModule.forFeature([User, Otp, Report, TrafficLight, Evidence]), MailModule, BcryptModule, JwtConfigModule],
-  providers: [DatabaseUserRepository, OtpService, DatabaseReportRepository, DatabaseTrafficLightRepository, DatabaseEvidenceRepository],
-  exports: [DatabaseUserRepository, OtpService, DatabaseReportRepository, DatabaseTrafficLightRepository, DatabaseEvidenceRepository],
+  imports: [TypeOrmConfigModule, TypeOrmModule.forFeature([User, Otp, Report, TrafficLight, Evidence, AdminUser]), MailModule, BcryptModule, JwtConfigModule],
+  providers: [DatabaseUserRepository, OtpService, DatabaseReportRepository, DatabaseTrafficLightRepository, DatabaseEvidenceRepository, DatabaseAdminUserRepository],
+  exports: [DatabaseUserRepository, OtpService, DatabaseReportRepository, DatabaseTrafficLightRepository, DatabaseEvidenceRepository, DatabaseAdminUserRepository],
 })
 export class RepositoriesModule {}

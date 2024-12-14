@@ -1,9 +1,64 @@
-import { Controller } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Inject, Post, Request, UseGuards } from "@nestjs/common";
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Roles } from "src/infrastructure/common/decorators/roles.decorator";
+import { LoginAdminDto } from "src/infrastructure/common/dto/admin-user/login-admin.dto";
+import { JwtAuthGuard } from "src/infrastructure/common/guards/jwtAuth.guard";
+import { RolesGuard } from "src/infrastructure/common/guards/roles.guard";
+import { UseCaseProxy } from "src/infrastructure/usecases-proxy/usecases-proxy";
+import { UsecasesProxyModule } from "src/infrastructure/usecases-proxy/usecases-proxy.module";
+import { LoginAdminUseCases } from "src/usecases/admin-users/login-admin.usecases";
+//import { Request } from 'express';
+import { Request as ExpressRequest } from 'express';
+@Controller('api/admin')
+@ApiTags('admin-auth')
+@ApiResponse({
+  status: 401,
+  description: 'No authorization token was found',
+})
+@ApiResponse({ status: 500, description: 'Internal error' })
 
-
-@Controller('admin/reports')
 export class AdminController {
-    constructor(){} 
+    constructor(
+    @Inject(UsecasesProxyModule.AdminUserUseCasesProxy)
+    private readonly adminUsecaseProxy: UseCaseProxy<LoginAdminUseCases>,
+    ){} 
+
+    @Post('register')
+    async registerAdmin(@Body() createUserDto: CreateUserDto) {
+        const registerUseCase = this.registerUserUseCase.getInstance();
+        const user = await registerUseCase.execute(createUserDto);
+        return { message: 'Usuario admin registrado con éxito.'}
+      }
+    @Post('login')
+    @Roles('super_admin')
+     @UseGuards(JwtAuthGuard, RolesGuard)
+     @ApiBearerAuth()
+     @ApiBody({ type: LoginAdminDto })
+      @ApiOperation({ description: 'Iniciar sesión de un administrador' })
+      @ApiResponse({ status: 200, description: 'Login successful' })
+      @ApiResponse({ status: 401, description: 'Unauthorized' })
+    async loginAdmin(@Body() loginAdminDto: LoginAdminDto): Promise<{ access_token: string }> {
+        const { email, password} = loginAdminDto;
+        try {
+            const {token} = await this.adminUsecaseProxy.getInstance().loginAdmin(email, password);
+            return {
+                access_token: token
+            };
+          } catch (error) {
+            throw new BadRequestException(error.message);
+          }
+    }
+
+    @Post('logout')
+    @UseGuards(JwtAuthGuard)
+    @ApiOperation({ summary: 'Cerrar sesión de un administrador' })
+    async logout(@Request() request: ExpressRequest) {
+      request.res.setHeader('Set-Cookie', 'Authentication=; HttpOnly; Path=/; Max-Age=0;');
+      request.res.setHeader('Set-Cookie', 'Refresh=; HttpOnly; Path=/; Max-Age=0;');
+  
+      return { message: 'Logout exitoso' };
+    }
+
 
     // asignar reportes a semaforos especificos
 //     @Put(':id/assign')
