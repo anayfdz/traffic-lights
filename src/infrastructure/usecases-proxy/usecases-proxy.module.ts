@@ -28,12 +28,14 @@ import { DatabaseReportRepository } from '../repositories/reports/report.reposit
 import { ReportTrafficLightUseCase } from 'src/usecases/reports/create-report-traffic-light.usecase';
 import { DatabaseTrafficLightRepository } from '../repositories/traffic-lights/traffic.repository';
 import { CreateTrafficLightUseCase } from 'src/usecases/traffic-lights/create-traffic-light.usecase';
+
 import { TrafficUseCasesModule } from 'src/usecases/traffic-lights/traffic.module';
 import { EvidencesUseCasesModule } from 'src/usecases/evidences/evidence-usecases.module';
 import { DatabaseEvidenceRepository } from '../repositories/evidences/evidence.repository';
 import { CreateEvidenceUseCase } from 'src/usecases/evidences/createEvidences.usecases';
 import { AdminUserModule } from 'src/usecases/admin-users/admin-user.module';
 import { DatabaseAdminUserRepository } from '../repositories/admin-users/admin.repository';
+import { LoginAdminUseCases } from 'src/usecases/admin-users/login-admin.usecases';
 
 @Module({
   imports: [
@@ -150,9 +152,10 @@ export class UsecasesProxyModule {
         },
         // admin
         {
-          inject: [DatabaseAdminUserRepository],
+          inject: [DatabaseAdminUserRepository, JwtTokenService, BcryptService, LoggerService],
           provide: UsecasesProxyModule.AdminUserUseCasesProxy,
-          useFactory: () => new UseCaseProxy(new AdminUserModule()),
+          useFactory: (admin: DatabaseAdminUserRepository, token: JwtTokenService, bcrypt: BcryptService, logger: LoggerService) =>
+            new UseCaseProxy(new LoginAdminUseCases(admin, token, bcrypt, logger)),
         },
       ],
       exports: [

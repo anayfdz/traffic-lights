@@ -22,16 +22,8 @@ export class AdminController {
     @Inject(UsecasesProxyModule.AdminUserUseCasesProxy)
     private readonly adminUsecaseProxy: UseCaseProxy<LoginAdminUseCases>,
     ){} 
-
-    @Post('register')
-    async registerAdmin(@Body() createUserDto: CreateUserDto) {
-        const registerUseCase = this.registerUserUseCase.getInstance();
-        const user = await registerUseCase.execute(createUserDto);
-        return { message: 'Usuario admin registrado con éxito.'}
-      }
     @Post('login')
-    @Roles('super_admin')
-     @UseGuards(JwtAuthGuard, RolesGuard)
+     @UseGuards(JwtAuthGuard)
      @ApiBearerAuth()
      @ApiBody({ type: LoginAdminDto })
       @ApiOperation({ description: 'Iniciar sesión de un administrador' })

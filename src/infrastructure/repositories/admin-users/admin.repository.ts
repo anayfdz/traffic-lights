@@ -36,14 +36,14 @@ export class DatabaseAdminUserRepository implements IAdminUserRepository {
     );
   }
 
-  async createAdmin(createAdminDto: CreateAdminDto): Promise<AdminUserM> {
-    const adminUser = this.adminUserRepository.create(createAdminDto);
-    return this.adminUserRepository.save(adminUser);
-  }
+  // async createAdmin(createAdminDto: CreateAdminDto): Promise<AdminUserM> {
+  //   const adminUser = this.adminUserRepository.create(createAdminDto);
+  //   return this.adminUserRepository.save(adminUser);
+  // }
 
-  async findAdminByEmail(email: string): Promise<AdminUserM | undefined> {
-    return this.adminUserRepository.findOne({ where: { email } });
-  }
+  // async findAdminByEmail(email: string): Promise<AdminUserM | undefined> {
+  //   return this.adminUserRepository.findOne({ where: { email } });
+  // }
 
 
   async findByEmail(email: string): Promise<AdminUserM | null> {
