@@ -23,11 +23,11 @@ export class DatabaseTrafficLightRepository implements ITrafficLightRepository {
       department: trafficLight.department,
       province: trafficLight.province,
       district: trafficLight.district,
-      location: { type: 'Point', coordinates: [trafficLight.longitude, trafficLight.latitude] } // punto geospacial
+      location: { type: 'Point', coordinates: [trafficLight.longitude, trafficLight.latitude] }, // punto geospacial
     });
 
     const savedTrafficLight = await this.trafficLightRepository.save(newTrafficLight);
-    console.log('fro repository create', savedTrafficLight)
+    console.log('fro repository create', savedTrafficLight);
 
     return this.toTrafficLightM(savedTrafficLight);
   }
@@ -45,26 +45,38 @@ export class DatabaseTrafficLightRepository implements ITrafficLightRepository {
         latitude,
         longitude,
         radius,
-      }).getMany();
-      console.log('nerby traffic', trafficLights)
-    return trafficLights.map(this.toTrafficLightM)
+      })
+      .getMany();
+    console.log('nerby traffic', trafficLights);
+    return trafficLights.map(this.toTrafficLightM);
   }
 
   // Filtrar semáforos por departamento, provincia o distrito
-  async filter(department?: string, province?: string, district?: string): Promise<TrafficLightM[]> {
-    const queryBuilder = this.trafficLightRepository.createQueryBuilder('trafficLight');
-
+  async filterTraffic(department?: string, province?: string, district?: string): Promise<TrafficLightM[]> {
+    const queryBuilder = this.trafficLightRepository.createQueryBuilder('tl');
+    //.select(['trafficLight.id', 'trafficLight.latitude', 'trafficLight.longitude', 'trafficLight.type', 'trafficLight.department', 'trafficLight.province', 'trafficLight.district'])
+    //.cache(true);
+    const conditions: any = {};
+    const parameters = [];
     if (department) {
-      queryBuilder.andWhere('trafficLight.department = :department', { department });
+      queryBuilder.andWhere('tl.department = :department', { department });
+      // conditions.department = department;
+      // parameters.push(department);
     }
     if (province) {
-      queryBuilder.andWhere('trafficLight.province = :province', { province });
+      queryBuilder.andWhere('tl.province = :province', { province });
+      // conditions.province = province;
+      // parameters.push(province);
     }
     if (district) {
-      queryBuilder.andWhere('trafficLight.district = :district', { district });
+      queryBuilder.andWhere('tl.district = :district', { district });
+      // conditions.district = district;
+      // parameters.push(district);
     }
 
     const trafficLights = await queryBuilder.getMany();
+    console.log('Consulta generada:', queryBuilder.getQueryAndParameters());
+    console.log('Resultados:', trafficLights);
     return trafficLights.map(this.toTrafficLightM);
   }
 
@@ -94,16 +106,18 @@ export class DatabaseTrafficLightRepository implements ITrafficLightRepository {
   }
 
   async save(trafficLight: TrafficLightM): Promise<TrafficLightM> {
-    const savedTrafficLight = await this.trafficLightRepository.save({...trafficLight});
+    const savedTrafficLight = await this.trafficLightRepository.save({ ...trafficLight });
     return this.toTrafficLightM(savedTrafficLight);
   }
 
   // Método de conversión de entidad a modelo (TrafficLight -> TrafficLightM)
   private toTrafficLightM(trafficLight: TrafficLight): TrafficLightM {
-    const location = trafficLight.location ? {
-      latitude: trafficLight.location.coordinates[1],
-      longitude: trafficLight.location.coordinates[0]
-    } : { latitude: 0, longitude: 0 };
+    const location = trafficLight.location
+      ? {
+          latitude: trafficLight.location.coordinates[1],
+          longitude: trafficLight.location.coordinates[0],
+        }
+      : { latitude: 0, longitude: 0 };
     return new TrafficLightM(
       trafficLight.id,
       trafficLight.latitude,

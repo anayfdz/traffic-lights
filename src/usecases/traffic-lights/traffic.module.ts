@@ -5,10 +5,11 @@ import { CreateTrafficLightUseCase } from '../traffic-lights/create-traffic-ligh
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TrafficLight } from 'src/infrastructure/entities/traffic-lights/trafficLight.entity';
 import { DatabaseTrafficLightRepository } from 'src/infrastructure/repositories/traffic-lights/traffic.repository';
+import { FilterTrafficLightsUseCase } from './filter-traffic-lights.usecases';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TrafficLight])],
-  providers: [DatabaseTrafficLightRepository, CreateTrafficLightUseCase],
-  exports: [CreateTrafficLightUseCase],
+  providers: [DatabaseTrafficLightRepository, CreateTrafficLightUseCase, FilterTrafficLightsUseCase],
+  exports: [CreateTrafficLightUseCase, FilterTrafficLightsUseCase],
 })
 export class TrafficUseCasesModule {}

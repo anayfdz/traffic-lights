@@ -1,28 +1,18 @@
-// import { Injectable } from '@nestjs/common';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Repository } from 'typeorm';
-// import { TrafficLight } from '../../entities/traffic-lights/traffic-light.entity';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TrafficLight } from '../../infrastructure/entities/traffic-lights/trafficLight.entity';
+import { ITrafficLightRepository } from 'src/domain/repositories/traffic-lights/trafficLightRepository.interface';
+import { TrafficLightM } from 'src/domain/model/traffic-lights/trafficLight';
 
-// @Injectable()
-// export class FilterTrafficLightsUseCase {
-//   constructor(
-//     @InjectRepository(TrafficLight)
-//     private readonly trafficLightRepository: Repository<TrafficLight>,
-//   ) {}
+@Injectable()
+export class FilterTrafficLightsUseCase {
+  constructor(
+    @InjectRepository(TrafficLight)
+    private readonly trafficLightRepository: ITrafficLightRepository,
+  ) {}
 
-//   async execute(department?: string, province?: string, district?: string): Promise<TrafficLight[]> {
-//     const query = this.trafficLightRepository.createQueryBuilder('traffic_light');
-
-//     if (department) {
-//       query.andWhere('traffic_light.department = :department', { department });
-//     }
-//     if (province) {
-//       query.andWhere('traffic_light.province = :province', { province });
-//     }
-//     if (district) {
-//       query.andWhere('traffic_light.district = :district', { district });
-//     }
-
-//     return query.getMany();
-//   }
-// }
+  async execute(department?: string, province?: string, district?: string): Promise<TrafficLightM[]> {
+    const trafficLights  = await this.trafficLightRepository.filterTraffic(department, province, district);
+    return trafficLights;
+  }
+}

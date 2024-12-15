@@ -37,6 +37,7 @@ import { AdminUserModule } from 'src/usecases/admin-users/admin-user.module';
 import { DatabaseAdminUserRepository } from '../repositories/admin-users/admin.repository';
 import { LoginAdminUseCases } from 'src/usecases/admin-users/login-admin.usecases';
 import { FindReportsUserUseCase } from 'src/usecases/user/find-reports-authenticate-user.usecases';
+import { FilterTrafficLightsUseCase } from 'src/usecases/traffic-lights/filter-traffic-lights.usecases';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ export class UsecasesProxyModule {
 
   // trafic
   static CreateTrafficLightUseCaseProxy = 'CreateTrafficLightUseCaseProxy';
+  static FilterTrafficLightsUseCaseProxy = 'FilterTrafficLightsUseCaseProxy';
   // evidence
   static EvidencesUseCasesProxy = 'EvidencesUseCasesProxy';
   // admin
@@ -152,6 +154,12 @@ export class UsecasesProxyModule {
           useFactory: (trafficLight: DatabaseTrafficLightRepository) =>
             new UseCaseProxy(new CreateTrafficLightUseCase(trafficLight)),
         },
+        {
+          inject: [DatabaseTrafficLightRepository],
+          provide: UsecasesProxyModule.FilterTrafficLightsUseCaseProxy,
+          useFactory: (trafficLight: DatabaseTrafficLightRepository) =>
+            new UseCaseProxy(new FilterTrafficLightsUseCase(trafficLight))
+        },
         // evidence
         {
           inject: [DatabaseEvidenceRepository],
@@ -179,6 +187,7 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.EvidencesUseCasesProxy,
         UsecasesProxyModule.AdminUserUseCasesProxy,
         UsecasesProxyModule.FIND_REPORTS_USERS_USECASES_PROXY,
+        UsecasesProxyModule.FilterTrafficLightsUseCaseProxy,
       ],
     };
   }
