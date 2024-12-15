@@ -91,8 +91,14 @@ export class LoginUseCases {
     return user;
   }
 
-  async validateUserForJWTStragtegy(email: string) {
-    const user = await this.userRepository.findOneByEmail(email);
+  async validateUserForJWTStragtegy(email: string, id?: number) {
+    let user;
+    if(id) {
+      user = await this.userRepository.getUserById(id);
+    } else if(email) {
+      user = await this.userRepository.findOneByEmail(email);
+    }
+    
     if (!user) {
       return null;
     }

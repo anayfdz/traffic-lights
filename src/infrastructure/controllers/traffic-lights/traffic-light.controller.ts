@@ -8,7 +8,7 @@ import { CreateReportDto } from 'src/infrastructure/common/dto/report/create-rep
 import * as path from 'path';
 import { JwtAuthGuard } from 'src/infrastructure/common/guards/jwtAuth.guard';
 import { CreateTrafficLightDto } from 'src/infrastructure/common/dto/traffic-lights/create-traffic-light.dto';
-import { AdminGuard } from 'src/infrastructure/common/guards/Admin.guard';
+import { AdminGuard } from '../../common/guards/admin.guard';
 @Controller('api')
 export class TrafficLightController {
   constructor(

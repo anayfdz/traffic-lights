@@ -36,6 +36,7 @@ import { CreateEvidenceUseCase } from 'src/usecases/evidences/createEvidences.us
 import { AdminUserModule } from 'src/usecases/admin-users/admin-user.module';
 import { DatabaseAdminUserRepository } from '../repositories/admin-users/admin.repository';
 import { LoginAdminUseCases } from 'src/usecases/admin-users/login-admin.usecases';
+import { FindReportsUserUseCase } from 'src/usecases/user/find-reports-authenticate-user.usecases';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ export class UsecasesProxyModule {
   static RESEND_USECASES_PROXY = 'ResendOtpUsecasesProxy';
   static REGISTER_USECASES_PROXY = 'RegisterUseCasesProxy';
   static VALIDATE_USECASES_EMAIL_PROXY = 'ValidateEmailUsecasesProxy';
+  static FIND_REPORTS_USERS_USECASES_PROXY = 'FindReportsUsersUsecasesProxy';
 
   // mail
   static MAIL_SERVICE = 'MailModule';
@@ -74,6 +76,7 @@ export class UsecasesProxyModule {
   static EvidencesUseCasesProxy = 'EvidencesUseCasesProxy';
   // admin
   static AdminUserUseCasesProxy = 'AdminUserUseCasesProxy';
+
 
   static register(): DynamicModule {
     return {
@@ -116,6 +119,11 @@ export class UsecasesProxyModule {
           inject: [DatabaseUserRepository],
           provide: UsecasesProxyModule.VALIDATE_USECASES_EMAIL_PROXY,
           useFactory: (userRepo: DatabaseUserRepository) => new UseCaseProxy(new ValidateEmailUsecases(userRepo)),
+        },
+        {
+          inject: [DatabaseUserRepository, DatabaseReportRepository],
+          provide: UsecasesProxyModule.FIND_REPORTS_USERS_USECASES_PROXY,
+          useFactory: (userRepo: DatabaseUserRepository, reportRepo: DatabaseReportRepository) => new UseCaseProxy(new FindReportsUserUseCase(userRepo, reportRepo)),
         },
         // mail service
         {
@@ -170,6 +178,7 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.CreateTrafficLightUseCaseProxy,
         UsecasesProxyModule.EvidencesUseCasesProxy,
         UsecasesProxyModule.AdminUserUseCasesProxy,
+        UsecasesProxyModule.FIND_REPORTS_USERS_USECASES_PROXY,
       ],
     };
   }

@@ -36,8 +36,6 @@ constructor(
     reportEntity.comments = reportData.comments;
     reportEntity.reported_at = reportData.reported_at;
     reportEntity.description = reportData.description;
-
-    // Guardar el reporte
     const savedReport = await this.reportEntityRepository.save(reportEntity);
 
     // Guardar las evidencias asociadas al reporte
@@ -53,7 +51,7 @@ constructor(
       }
     }
 
-    return this.toReportM(savedReport);
+    return this.toReportM(savedReport) as ReportM;
     
   }
 
@@ -65,7 +63,15 @@ constructor(
     if (!reportEntity) {
       return null;
     }
-    return this.toReportM(reportEntity);
+    return this.toReportM(reportEntity) as ReportM;
+  }
+
+  async findReportsByUserId(userId: number): Promise<ReportM[]> {
+    const findReports = await this.reportEntityRepository.find({
+      where: { user: {id: userId} },
+      relations: ['user', 'trafficLight', 'evidences'],
+    });
+    return this.toReportM(findReports) as ReportM[];
   }
 
   async updateReport(reportData: ReportM): Promise<ReportM> {
@@ -80,7 +86,7 @@ constructor(
     reportEntity.description = reportData.description;
 
     const updatedReport = await this.reportEntityRepository.save(reportEntity);
-    return this.toReportM(updatedReport);
+    return this.toReportM(updatedReport) as ReportM;
   }
 
   async deleteReport(id: number): Promise<void> {
@@ -92,7 +98,12 @@ constructor(
     await this.reportEntityRepository.remove(reportEntity);
   }
 
-  private toReportM(reportEntity: Report): ReportM {
+  private toReportM(reportEntity: Report | Report[]): ReportM | ReportM[] {
+    if (Array.isArray(reportEntity)) {
+      // Si es un array de reportes, convertimos cada uno de ellos.
+      return reportEntity.map((report) => this.toReportM(report) as ReportM);
+    } else{
+      // Si es un solo reporte, lo convertimos normalmente.
     const location =reportEntity.trafficLight && reportEntity.trafficLight.location ?
     {
       latitude: reportEntity.trafficLight.location.coordinates[1],
@@ -131,6 +142,7 @@ constructor(
       evidences
     );
   }
+}
 
   private toUser(userEntity: User): UserM {
     return new UserM(
@@ -149,11 +161,12 @@ constructor(
 
   private toEvidence(evidenceEntity: Evidence): EvidenceM {
     const fileType = this.convertToFileType(evidenceEntity.file_type);
+    const reportId = evidenceEntity.report ? evidenceEntity.report.id : null;
     return new EvidenceM(
       evidenceEntity.id,
       evidenceEntity.file_path,
       fileType,
-      evidenceEntity.report.id,
+      reportId,
       evidenceEntity.uploaded_at,
     );
   }

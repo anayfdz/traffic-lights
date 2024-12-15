@@ -1,15 +1,12 @@
-import { Controller, Post, Body, Param, Inject } from '@nestjs/common';
-import { DatabaseUserRepository } from '../../repositories/users/user.repository';
-//import { User } from '../../entities/users/user.entity';
+import { Controller, Post, Body, Param, Request, Inject, UseGuards, Get } from '@nestjs/common';
 import { CreateUserDto } from '../../common/dto/user/create-user.dto';
 import { ValidateEmailDto } from '../../common/dto/user/validate-email.dto';
-import { ResendOtpDto } from '../../common/dto/user/resend-otp.dto';
-import { UserM } from '../../../domain/model/users/user';
-import { LoginDto } from 'src/infrastructure/common/dto/auth/login.dto';
 import { RegisterUserUseCase } from 'src/usecases/user/register-user.usecases';
 import { ValidateEmailUsecases } from 'src/usecases/user/validate-email.usecases';
 import { UsecasesProxyModule } from 'src/infrastructure/usecases-proxy/usecases-proxy.module';
 import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases-proxy';
+import { FindReportsUserUseCase } from 'src/usecases/user/find-reports-authenticate-user.usecases';
+import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
 
 
 interface ResponseValidEmail {
@@ -22,7 +19,10 @@ export class UserController {
   constructor(@Inject(UsecasesProxyModule.REGISTER_USECASES_PROXY)
   private readonly registerUserUseCase: UseCaseProxy<RegisterUserUseCase>, 
   @Inject(UsecasesProxyModule.VALIDATE_USECASES_EMAIL_PROXY)
-  private readonly validateEmailUseCase: UseCaseProxy<ValidateEmailUsecases>) { }
+  private readonly validateEmailUseCase: UseCaseProxy<ValidateEmailUsecases>,
+  @Inject(UsecasesProxyModule.FIND_REPORTS_USERS_USECASES_PROXY)
+  private readonly findReportsUserUseCase: UseCaseProxy<FindReportsUserUseCase>
+) { }
   @Post('register')
   async registerUser(@Body() createUserDto: CreateUserDto) {
     const registerUseCase = this.registerUserUseCase.getInstance();
@@ -40,13 +40,13 @@ export class UserController {
     return {message: 'Correo electrónico validado con éxito.'}
   }
 
-  // ver reporte de usuario
-  // @Get('reports')
-  // @UseGuards(JwtAuthGuard)
-  // async getUserReports(@Request() req) {
-  //   return await this.trafficLightService.getUserReports(req.user.id);
-  // }
-  //   @Post('logout') async logout() { 
-  //     return this.userService.logout(); 
-  //   }
+  @Get('reports')
+  @UseGuards(JwtAuthGuard)
+  async getUserReports(@Request() req) {
+    const userId = req.user.sub;
+    return await this.findReportsUserUseCase.getInstance().execute(userId);
+  }
+    // @Post('logout') async logout() { 
+    //   return this.userService.logout(); 
+    // }
 }

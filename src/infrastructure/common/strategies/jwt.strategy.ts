@@ -31,8 +31,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       this.logger.warn('LocalStrategy', `Token inválido, no se encuentra el payload`);
       this.exceptionService.UnauthorizedException({ message: 'invalid token'});
     }
+    console.log('payload recibido', payload);
 
-    const user = await this.loginUsecaseProxy.getInstance().validateUserForJWTStragtegy(payload.email);
+    const user = await this.loginUsecaseProxy.getInstance().validateUserForJWTStragtegy(payload.email, payload.sub);
     if (!user) {
       this.logger.warn('JwtStrategy', `Usuario no encontrado: ${payload.email}`);
       this.exceptionService.UnauthorizedException({ message: 'Invalid token or user not found.' });
