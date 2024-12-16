@@ -10,6 +10,7 @@ import { JwtConfigModule as JwtServiceModule } from './infrastructure/services/j
 import { EnvironmentConfigModule } from './infrastructure/config/environment-config/environment-config.module';
 import { LocalStrategy } from './infrastructure/common/strategies/local.strategy';
 import { JwtStrategy } from './infrastructure/common/strategies/jwt.strategy';
+import { JwtAdminStrategy } from './infrastructure/common/strategies/jwt-admin.strategy';
 import { JwtRefreshTokenStrategy } from './infrastructure/common/strategies/jwtRefresh.strategy';
 
 @Module({
@@ -26,6 +27,6 @@ import { JwtRefreshTokenStrategy } from './infrastructure/common/strategies/jwtR
     JwtServiceModule,
     EnvironmentConfigModule,
   ],
-  providers: [LocalStrategy, JwtStrategy, JwtRefreshTokenStrategy],
+  providers: [LocalStrategy, JwtStrategy,JwtAdminStrategy, JwtRefreshTokenStrategy],
 })
 export class AppModule {}

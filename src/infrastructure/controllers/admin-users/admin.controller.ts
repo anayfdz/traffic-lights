@@ -23,7 +23,6 @@ export class AdminController {
     private readonly adminUsecaseProxy: UseCaseProxy<LoginAdminUseCases>,
     ){} 
     @Post('login')
-     @UseGuards(JwtAuthGuard)
      @ApiBearerAuth()
      @ApiBody({ type: LoginAdminDto })
       @ApiOperation({ description: 'Iniciar sesión de un administrador' })

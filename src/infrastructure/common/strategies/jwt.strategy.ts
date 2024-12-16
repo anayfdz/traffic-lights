@@ -7,6 +7,7 @@ import { UseCaseProxy } from '../../usecases-proxy/usecases-proxy';
 import { LoginUseCases } from '../../../usecases/auth/login.usecases';
 import { ExceptionsService } from '../../exceptions/exceptions.service';
 import { LoggerService } from '../../logger/logger.service';
+import { LoginAdminUseCases } from '../../../usecases/admin-users/login-admin.usecases';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -17,28 +18,26 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly exceptionService: ExceptionsService,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => {
-          return request?.cookies?.Authentication;
-        },
-      ]),
+      jwtFromRequest: (request: Request) => {
+        return request?.headers?.authorization?.split(' ')[1];
+      },
       secretOrKey: process.env.JWT_SECRET,
     });
   }
 
   async validate(payload: any) {
+    console.log('Payload recibido:', payload);
     if (!payload) {
       this.logger.warn('LocalStrategy', `Token inválido, no se encuentra el payload`);
-      this.exceptionService.UnauthorizedException({ message: 'invalid token'});
-    }
-    console.log('payload recibido', payload);
+      this.exceptionService.UnauthorizedException({ message: 'invalid token' });
+    } 
 
     const user = await this.loginUsecaseProxy.getInstance().validateUserForJWTStragtegy(payload.email, payload.sub);
     if (!user) {
       this.logger.warn('JwtStrategy', `Usuario no encontrado: ${payload.email}`);
-      this.exceptionService.UnauthorizedException({ message: 'Invalid token or user not found.' });
+      this.exceptionService.UnauthorizedException({ message: 'Usuario no encontrado o token inválido' });
     }
-
+    console.log('Usuario autenticado', user);
     return user;
   }
 }

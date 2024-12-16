@@ -23,28 +23,19 @@ export class CreateTrafficLightUseCase {
         throw new ConflictException('Traffic light already exists near this location');
       }
 
-      // Crear una instancia de TrafficLightM desde el DTO
-        const trafficLightM = new TrafficLightM(
-        null, // ID es nulo ya que será asignado automáticamente al guardar
+      const trafficLightM = new TrafficLightM(
+        null,
         createTrafficLightDto.latitude,
         createTrafficLightDto.longitude,
         createTrafficLightDto.type,
         createTrafficLightDto.department,
         createTrafficLightDto.province,
         createTrafficLightDto.district,
-        createTrafficLightDto.location,
+        { latitude: createTrafficLightDto.latitude, longitude: createTrafficLightDto.longitude },
         new Date(),
         new Date(),
-      )
-      console.log('before creation', trafficLightM)
-  
-      // Si no existe, creamos el semáforo
-      const trafficLight = await this.trafficLightRepository.create(trafficLightM);
-      console.log('creanding', trafficLight)
-  
-      if (!trafficLight) {
-        throw new Error('Error creating traffic light');
-      }
-    return this.trafficLightRepository.save(trafficLight);
+      );  
+      return this.trafficLightRepository.create(trafficLightM)
   }
+  
 }

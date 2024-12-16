@@ -1,4 +1,3 @@
-// src/infrastructure/repositories/traffic-lights/database-traffic-light.repository.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -23,7 +22,7 @@ export class DatabaseTrafficLightRepository implements ITrafficLightRepository {
       department: trafficLight.department,
       province: trafficLight.province,
       district: trafficLight.district,
-      location: { type: 'Point', coordinates: [trafficLight.longitude, trafficLight.latitude] }, // punto geospacial
+      location: { type: 'Point', coordinates: [trafficLight.longitude, trafficLight.latitude] },
     });
 
     const savedTrafficLight = await this.trafficLightRepository.save(newTrafficLight);
@@ -54,24 +53,15 @@ export class DatabaseTrafficLightRepository implements ITrafficLightRepository {
   // Filtrar semáforos por departamento, provincia o distrito
   async filterTraffic(department?: string, province?: string, district?: string): Promise<TrafficLightM[]> {
     const queryBuilder = this.trafficLightRepository.createQueryBuilder('tl');
-    //.select(['trafficLight.id', 'trafficLight.latitude', 'trafficLight.longitude', 'trafficLight.type', 'trafficLight.department', 'trafficLight.province', 'trafficLight.district'])
-    //.cache(true);
-    const conditions: any = {};
-    const parameters = [];
+
     if (department) {
       queryBuilder.andWhere('tl.department = :department', { department });
-      // conditions.department = department;
-      // parameters.push(department);
     }
     if (province) {
       queryBuilder.andWhere('tl.province = :province', { province });
-      // conditions.province = province;
-      // parameters.push(province);
     }
     if (district) {
       queryBuilder.andWhere('tl.district = :district', { district });
-      // conditions.district = district;
-      // parameters.push(district);
     }
 
     const trafficLights = await queryBuilder.getMany();

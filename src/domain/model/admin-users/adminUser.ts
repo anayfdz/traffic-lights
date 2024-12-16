@@ -54,6 +54,9 @@ export class AdminUserM {
   get password(): string {
     return this._password;
   }
+  get role(): Roles {
+    return this._role;
+  }
   // setters
 
   set role(value: Roles) {

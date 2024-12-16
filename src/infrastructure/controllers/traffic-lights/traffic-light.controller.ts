@@ -20,9 +20,14 @@ import { CreateReportDto } from 'src/infrastructure/common/dto/report/create-rep
 import * as path from 'path';
 import { JwtAuthGuard } from 'src/infrastructure/common/guards/jwtAuth.guard';
 import { CreateTrafficLightDto } from 'src/infrastructure/common/dto/traffic-lights/create-traffic-light.dto';
-import { AdminGuard } from '../../common/guards/admin.guard';
+//import { AdminGuard } from '../../common/guards/admin.guard';
 import { FilterTrafficLightsDto } from 'src/infrastructure/common/dto/traffic-lights/filter-traffic-lights.dto';
 import { FilterTrafficLightsUseCase } from 'src/usecases/traffic-lights/filter-traffic-lights.usecases';
+import { In } from 'typeorm';
+import { CreateTrafficLightUseCase } from 'src/usecases/traffic-lights/create-traffic-light.usecase';
+import { RolesGuard } from 'src/infrastructure/common/guards/roles.guard';
+import { Roles } from 'src/infrastructure/common/decorators/roles.decorator';
+import { JwtAdminAuthGuard } from 'src/infrastructure/common/guards/JwtAuthAdmin.guard';
 @Controller('api')
 export class TrafficLightController {
   constructor(
@@ -30,6 +35,8 @@ export class TrafficLightController {
     private readonly reportTrafficLightUseCase: UseCaseProxy<ReportTrafficLightUseCase>,
     @Inject(UsecasesProxyModule.FilterTrafficLightsUseCaseProxy)
     private readonly filterTrafficLightsUseCase: UseCaseProxy<FilterTrafficLightsUseCase>,
+    @Inject(UsecasesProxyModule.CreateTrafficLightUseCaseProxy)
+    private readonly createTrafficLightUseCase: UseCaseProxy<CreateTrafficLightUseCase>,
   ) {}
 
   @Post('traffic-lights/report')
@@ -85,10 +92,11 @@ export class TrafficLightController {
   //     return this.trafficLightService.getNearbyTrafficLights(nearbyTrafficLightsDto);
   // }
 
-  @Post()
-  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Post('traffic-lights')
+  @UseGuards(JwtAdminAuthGuard)
   async create(@Body() createTrafficLightDto: CreateTrafficLightDto) {
-    //return await this.trafficLightService.create(createTrafficLightDto);
+    console.log('Solicitud recibida:', createTrafficLightDto); 
+    return await this.createTrafficLightUseCase.getInstance().execute(createTrafficLightDto);
   }
 
   // actualizar semaforo solo admin
