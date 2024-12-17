@@ -9,25 +9,25 @@ class MockTrafficLightRepository {
     return Promise.resolve([
       new TrafficLightM(
         1,
-        -34.6000,
-        -58.3800,
+        -34.6,
+        -58.38,
         'Red',
         'Department 1',
         'Province 1',
         'District 1',
-        { latitude: -34.6000, longitude: -58.3800 },
+        { latitude: -34.6, longitude: -58.38 },
         new Date(),
         new Date(),
       ),
       new TrafficLightM(
         2,
-        -34.6040,
-        -58.3820,
+        -34.604,
+        -58.382,
         'Green',
         'Department 2',
         'Province 2',
         'District 2',
-        { latitude: -34.6040, longitude: -58.3820 },
+        { latitude: -34.604, longitude: -58.382 },
         new Date(),
         new Date(),
       ),
@@ -69,34 +69,30 @@ describe('GetNearbyTrafficLightsUseCase', () => {
 
     const result = await useCase.execute(mockDto);
 
-    expect(findNearbySpy).toHaveBeenCalledWith(
-      mockDto.latitude,
-      mockDto.longitude,
-      mockDto.radius,
-    );
+    expect(findNearbySpy).toHaveBeenCalledWith(mockDto.latitude, mockDto.longitude, mockDto.radius);
 
     expect(result).toEqual([
       new TrafficLightM(
         1,
-        -34.6000,
-        -58.3800,
+        -34.6,
+        -58.38,
         'Red',
         'Department 1',
         'Province 1',
         'District 1',
-        { latitude: -34.6000, longitude: -58.3800 },
+        { latitude: -34.6, longitude: -58.38 },
         expect.any(Date),
         expect.any(Date),
       ),
       new TrafficLightM(
         2,
-        -34.6040,
-        -58.3820,
+        -34.604,
+        -58.382,
         'Green',
         'Department 2',
         'Province 2',
         'District 2',
-        { latitude: -34.6040, longitude: -58.3820 },
+        { latitude: -34.604, longitude: -58.382 },
         expect.any(Date),
         expect.any(Date),
       ),
@@ -107,11 +103,9 @@ describe('GetNearbyTrafficLightsUseCase', () => {
     const mockDto: NearbyTrafficLightsDto = {
       latitude: -34.6037,
       longitude: -58.3816,
-      radius: 100,  // Fuera del rango permitido (0-50)
+      radius: 100, // Fuera del rango permitido (0-50)
     };
 
-    await expect(useCase.execute(mockDto)).rejects.toThrowError(
-      'El radio debe ser mayor que 0 y menor que 50 km',
-    );
+    await expect(useCase.execute(mockDto)).rejects.toThrowError('El radio debe ser mayor que 0 y menor que 50 km');
   });
 });
