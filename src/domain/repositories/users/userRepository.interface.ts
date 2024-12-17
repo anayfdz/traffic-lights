@@ -1,7 +1,10 @@
-import { CreateUserDto } from "src/infrastructure/common/dto/user/create-user.dto";
+//import { CreateUserDto } from "src/infrastructure/common/dto/user/create-user.dto";
+import { CreateUserDto } from "../../../infrastructure/common/dto/user/create-user.dto";
 import { UserM } from "../../model/users/user";
-import { User } from "src/infrastructure/entities/users/user.entity";
-import { ValidateEmailDto } from "src/infrastructure/common/dto/user/validate-email.dto";
+//import { User } from "src/infrastructure/entities/users/user.entity";
+import { User } from "../../../infrastructure/entities/users/user.entity";
+//import { ValidateEmailDto } from "src/infrastructure/common/dto/user/validate-email.dto";
+import { ValidateEmailDto } from "../../../infrastructure/common/dto/user/validate-email.dto";
 
 export interface UserRepository {
   registerUser(createUserDto: CreateUserDto): Promise<UserM>;

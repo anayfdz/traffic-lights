@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { EvidenceM, FileType } from 'src/domain/model/evidences/evidence';
-import { DatabaseEvidenceRepository } from 'src/infrastructure/repositories/evidences/evidence.repository';
+//import { EvidenceM, FileType } from 'src/domain/model/evidences/evidence';
+import { EvidenceM, FileType } from '../../domain/model/evidences/evidence';
+//import { DatabaseEvidenceRepository } from 'src/infrastructure/repositories/evidences/evidence.repository';
+import { DatabaseEvidenceRepository } from '../../infrastructure/repositories/evidences/evidence.repository';
+
 
 @Injectable()
 export class CreateEvidenceUseCase {

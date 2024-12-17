@@ -1,11 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateReportDto } from 'src/infrastructure/common/dto/report/create-report.dto';
-import { IReportRepository } from 'src/domain/repositories/reports/reportRepository.interface';
-import { ITrafficLightRepository } from 'src/domain/repositories/traffic-lights/trafficLightRepository.interface';
-import { ReportM, Status } from 'src/domain/model/reports/report';
-import { UserM } from 'src/domain/model/users/user';
-import { CreateTrafficLightDto } from 'src/infrastructure/common/dto/traffic-lights/create-traffic-light.dto';
+//import { CreateReportDto } from 'src/infrastructure/common/dto/report/create-report.dto';
+import { CreateReportDto } from '../../infrastructure/common/dto/report/create-report.dto';
+//import { IReportRepository } from 'src/domain/repositories/reports/reportRepository.interface';
+import { IReportRepository } from '../../domain/repositories/reports/reportRepository.interface';
+//import { ITrafficLightRepository } from 'src/domain/repositories/traffic-lights/trafficLightRepository.interface';
+import { ITrafficLightRepository } from '../../domain/repositories/traffic-lights/trafficLightRepository.interface';
+import { ReportM, Status } from '../../domain/model/reports/report';
+//import { UserM } from 'src/domain/model/users/user';
+import { UserM } from '../../domain/model/users/user';
+import { CreateTrafficLightDto } from '../../infrastructure/common/dto/traffic-lights/create-traffic-light.dto';
 import { CreateTrafficLightUseCase } from '../traffic-lights/create-traffic-light.usecase';
 import { CreateEvidenceUseCase } from '../evidences/createEvidences.usecases';
 

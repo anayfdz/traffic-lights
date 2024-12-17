@@ -3,8 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 import { Evidence } from '../../entities/evidences/evidences.entity';
 import { Report } from '../../entities/reports/report.entity';
-import { IEvidenceRepository } from 'src/domain/repositories/evidences/evidence.interface';
-import { EvidenceM, FileType } from 'src/domain/model/evidences/evidence';
+//import { IEvidenceRepository } from 'src/domain/repositories/evidences/evidence.interface';
+import { IEvidenceRepository } from '../../../domain/repositories/evidences/evidence.interface';
+//import { EvidenceM, FileType } from 'src/domain/model/evidences/evidence';
+import { EvidenceM, FileType } from '../../../domain/model/evidences/evidence';
+
 
 @Injectable()
 export class DatabaseEvidenceRepository implements IEvidenceRepository {

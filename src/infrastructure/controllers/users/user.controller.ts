@@ -1,11 +1,16 @@
 import { Controller, Post, Body, Param, Request, Inject, UseGuards, Get } from '@nestjs/common';
 import { CreateUserDto } from '../../common/dto/user/create-user.dto';
 import { ValidateEmailDto } from '../../common/dto/user/validate-email.dto';
-import { RegisterUserUseCase } from 'src/usecases/user/register-user.usecases';
-import { ValidateEmailUsecases } from 'src/usecases/user/validate-email.usecases';
-import { UsecasesProxyModule } from 'src/infrastructure/usecases-proxy/usecases-proxy.module';
-import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases-proxy';
-import { FindReportsUserUseCase } from 'src/usecases/user/find-reports-authenticate-user.usecases';
+//import { RegisterUserUseCase } from 'src/usecases/user/register-user.usecases';
+import { RegisterUserUseCase } from '../../../usecases/user/register-user.usecases';
+//import { ValidateEmailUsecases } from 'src/usecases/user/validate-email.usecases';
+import { ValidateEmailUsecases } from '../../../usecases/user/validate-email.usecases';
+//import { UsecasesProxyModule } from 'src/infrastructure/usecases-proxy/usecases-proxy.module';
+import { UsecasesProxyModule } from '../../../infrastructure/usecases-proxy/usecases-proxy.module';
+//import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases-proxy';
+import { UseCaseProxy } from '../../../infrastructure/usecases-proxy/usecases-proxy';
+//import { FindReportsUserUseCase } from 'src/usecases/user/find-reports-authenticate-user.usecases';
+import { FindReportsUserUseCase } from '../../../usecases/user/find-reports-authenticate-user.usecases';
 import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
 
 

@@ -2,10 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { IAdminUserRepository } from 'src/domain/repositories/admin-users/adminUser.interface';
-import { AdminUser } from 'src/infrastructure/entities/admin-users/adminUser.entity';
-import { LoginAdminDto } from 'src/infrastructure/common/dto/admin-user/login-admin.dto';
-import { AdminUserM, Roles } from 'src/domain/model/admin-users/adminUser';
+//import { IAdminUserRepository } from 'src/domain/repositories/admin-users/adminUser.interface';
+import { IAdminUserRepository } from '../../../domain/repositories/admin-users/adminUser.interface';
+//import { AdminUser } from 'src/infrastructure/entities/admin-users/adminUser.entity';
+import { AdminUser } from '../../../infrastructure/entities/admin-users/adminUser.entity';
+//import { LoginAdminDto } from 'src/infrastructure/common/dto/admin-user/login-admin.dto';
+import { LoginAdminDto } from '../../../infrastructure/common/dto/admin-user/login-admin.dto';
+//import { AdminUserM, Roles } from 'src/domain/model/admin-users/adminUser';
+import { AdminUserM, Roles } from '../../../domain/model/admin-users/adminUser';
+
 
 @Injectable()
 export class DatabaseAdminUserRepository implements IAdminUserRepository {

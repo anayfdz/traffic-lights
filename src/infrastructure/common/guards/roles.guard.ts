@@ -1,7 +1,8 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
-import { Roles } from 'src/domain/model/admin-users/adminUser';
+//import { Roles } from 'src/domain/model/admin-users/adminUser';
+import { Roles } from '../../../domain/model/admin-users/adminUser';
 import { JwtAuthGuard } from './jwtAuth.guard';
 
 

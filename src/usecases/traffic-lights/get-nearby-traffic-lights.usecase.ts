@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { NearbyTrafficLightsDto } from 'src/infrastructure/common/dto/traffic-lights/nearby-traffic-lights.dto';
-import { TrafficLight } from 'src/infrastructure/entities/traffic-lights/trafficLight.entity';
-import { ITrafficLightRepository } from 'src/domain/repositories/traffic-lights/trafficLightRepository.interface';
-import { TrafficLightM } from 'src/domain/model/traffic-lights/trafficLight';
+//import { NearbyTrafficLightsDto } from 'src/infrastructure/common/dto/traffic-lights/nearby-traffic-lights.dto';
+import { NearbyTrafficLightsDto } from '../../infrastructure/common/dto/traffic-lights/nearby-traffic-lights.dto';
+//import { TrafficLight } from 'src/infrastructure/entities/traffic-lights/trafficLight.entity';
+import { TrafficLight } from '../../infrastructure/entities/traffic-lights/trafficLight.entity';
+//import { ITrafficLightRepository } from 'src/domain/repositories/traffic-lights/trafficLightRepository.interface';
+import { ITrafficLightRepository } from '../../domain/repositories/traffic-lights/trafficLightRepository.interface';
+//import { TrafficLightM } from 'src/domain/model/traffic-lights/trafficLight';
+import { TrafficLightM } from '../../domain/model/traffic-lights/trafficLight';
+
 
  @Injectable()
 export class GetNearbyTrafficLightsUseCase {

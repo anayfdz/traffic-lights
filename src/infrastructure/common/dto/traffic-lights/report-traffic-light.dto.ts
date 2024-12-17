@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsDate, IsEnum, IsInt, IsNumber, IsOptional, IsString } from "class-validator";
-import { Status } from "src/domain/model/reports/report";
+import { Status } from "../../../../domain/model/reports/report";
 
 export class ReportTrafficLightDto {
     @ApiProperty({ required: false })

@@ -14,24 +14,39 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { UsecasesProxyModule } from 'src/infrastructure/usecases-proxy/usecases-proxy.module';
-import { ReportTrafficLightUseCase } from 'src/usecases/reports/create-report-traffic-light.usecase';
-import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases-proxy';
+//import { UsecasesProxyModule } from 'src/infrastructure/usecases-proxy/usecases-proxy.module';
+import { UsecasesProxyModule } from '../../../infrastructure/usecases-proxy/usecases-proxy.module';
+//import { ReportTrafficLightUseCase } from 'src/usecases/reports/create-report-traffic-light.usecase';
+import { ReportTrafficLightUseCase } from '../../../usecases/reports/create-report-traffic-light.usecase';
+//import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases-proxy';
+import { UseCaseProxy } from '../../../infrastructure/usecases-proxy/usecases-proxy';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { CreateReportDto } from 'src/infrastructure/common/dto/report/create-report.dto';
+//import { CreateReportDto } from 'src/infrastructure/common/dto/report/create-report.dto';
+import { CreateReportDto } from '../../common/dto/report/create-report.dto';
 import * as path from 'path';
-import { JwtAuthGuard } from 'src/infrastructure/common/guards/jwtAuth.guard';
-import { CreateTrafficLightDto } from 'src/infrastructure/common/dto/traffic-lights/create-traffic-light.dto';
-import { FilterTrafficLightsDto } from 'src/infrastructure/common/dto/traffic-lights/filter-traffic-lights.dto';
-import { FilterTrafficLightsUseCase } from 'src/usecases/traffic-lights/filter-traffic-lights.usecases';
-import { CreateTrafficLightUseCase } from 'src/usecases/traffic-lights/create-traffic-light.usecase';
-import { JwtAdminAuthGuard } from 'src/infrastructure/common/guards/JwtAuthAdmin.guard';
-import { UpdateTrafficLightDto } from 'src/infrastructure/common/dto/traffic-lights/update-traffic-light.dto';
-import { UpdateTrafficLightUseCase } from 'src/usecases/traffic-lights/update-traffic-light.usecase';
-import { NearbyTrafficLightsDto } from 'src/infrastructure/common/dto/traffic-lights/nearby-traffic-lights.dto';
-import { GetNearbyTrafficLightsUseCase } from 'src/usecases/traffic-lights/get-nearby-traffic-lights.usecase';
-import { DeleteTrafficLightUseCase } from 'src/usecases/traffic-lights/delete-traffic-light.usecase';
+//import { JwtAuthGuard } from 'src/infrastructure/common/guards/jwtAuth.guard';
+import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
+import { CreateTrafficLightDto } from '../../common/dto/traffic-lights/create-traffic-light.dto';
+//import { FilterTrafficLightsDto } from 'src/infrastructure/common/dto/traffic-lights/filter-traffic-lights.dto';
+import { FilterTrafficLightsDto } from '../../common/dto/traffic-lights/filter-traffic-lights.dto';
+//import { FilterTrafficLightsUseCase } from 'src/usecases/traffic-lights/filter-traffic-lights.usecases';
+import { FilterTrafficLightsUseCase } from '../../../usecases/traffic-lights/filter-traffic-lights.usecases';
+//import { CreateTrafficLightUseCase } from 'src/usecases/traffic-lights/create-traffic-light.usecase';
+import { CreateTrafficLightUseCase } from '../../../usecases/traffic-lights/create-traffic-light.usecase';
+//import { JwtAdminAuthGuard } from 'src/infrastructure/common/guards/JwtAuthAdmin.guard';
+import { JwtAdminAuthGuard } from '../../common/guards/JwtAuthAdmin.guard';
+//import { UpdateTrafficLightDto } from 'src/infrastructure/common/dto/traffic-lights/update-traffic-light.dto';
+import { UpdateTrafficLightDto } from '../../common/dto/traffic-lights/update-traffic-light.dto';
+//import { UpdateTrafficLightUseCase } from 'src/usecases/traffic-lights/update-traffic-light.usecase';
+import { UpdateTrafficLightUseCase } from '../../../usecases/traffic-lights/update-traffic-light.usecase';
+//import { NearbyTrafficLightsDto } from 'src/infrastructure/common/dto/traffic-lights/nearby-traffic-lights.dto';
+import { NearbyTrafficLightsDto } from '../../../infrastructure/common/dto/traffic-lights/nearby-traffic-lights.dto';
+//import { GetNearbyTrafficLightsUseCase } from 'src/usecases/traffic-lights/get-nearby-traffic-lights.usecase';
+import { GetNearbyTrafficLightsUseCase } from '../../../usecases/traffic-lights/get-nearby-traffic-lights.usecase';
+//import { DeleteTrafficLightUseCase } from 'src/usecases/traffic-lights/delete-traffic-light.usecase';
+import { DeleteTrafficLightUseCase } from '../../../usecases/traffic-lights/delete-traffic-light.usecase';
+
 @Controller('api')
 export class TrafficLightController {
   constructor(

@@ -5,7 +5,9 @@ import { Otp } from '../../entities/otps/otps.entity';
 import { User } from '../../entities/users/user.entity';
 import * as crypto from 'crypto';
 import { NotFoundException } from '@nestjs/common';
-import { MailService } from 'src/usecases/otps/mail-service';
+//import { MailService } from 'src/usecases/otps/mail-service';
+import { MailService } from '../../../usecases/otps/mail-service';
+
 
 @Injectable()
 export class OtpService {

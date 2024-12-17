@@ -1,4 +1,5 @@
-import { UserRepository } from 'src/domain/repositories/users/userRepository.interface';
+//import { UserRepository } from 'src/domain/repositories/users/userRepository.interface';
+import { UserRepository } from '../../domain/repositories/users/userRepository.interface';
 import { IBcryptService } from '../../domain/adapters/bcrypt.interface';
 import { IJwtService, IJwtServicePayload } from '../../domain/adapters/jwt.interface';
 import { JWTConfig } from '../../domain/config/jwt.interface';

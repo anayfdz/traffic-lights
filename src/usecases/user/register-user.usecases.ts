@@ -1,6 +1,9 @@
-import { UserRepository } from 'src/domain/repositories/users/userRepository.interface';
+//import { UserRepository } from 'src/domain/repositories/users/userRepository.interface';
+import { UserRepository } from '../../domain/repositories/users/userRepository.interface';
+
 import { UserM } from '../../domain/model/users/user';
-import { CreateUserDto } from 'src/infrastructure/common/dto/user/create-user.dto';
+//import { CreateUserDto } from 'src/infrastructure/common/dto/user/create-user.dto';
+import { CreateUserDto } from '../../infrastructure/common/dto/user/create-user.dto';
 import { ExternalService } from '../../infrastructure/repositories/users/external-service/external.service';
 import { Injectable } from '@nestjs/common';
 @Injectable()

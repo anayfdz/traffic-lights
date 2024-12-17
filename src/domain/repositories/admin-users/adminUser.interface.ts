@@ -1,5 +1,7 @@
-import { AdminUserM } from 'src/domain/model/admin-users/adminUser';
-import { LoginAdminDto } from 'src/infrastructure/common/dto/admin-user/login-admin.dto';
+//import { AdminUserM } from 'src/domain/model/admin-users/adminUser';
+import { AdminUserM } from '../../model/admin-users/adminUser';
+//import { LoginAdminDto } from 'src/infrastructure/common/dto/admin-user/login-admin.dto';
+import { LoginAdminDto } from '../../../infrastructure/common/dto/admin-user/login-admin.dto'
 
 export interface IAdminUserRepository {
   findByEmail(email: string): Promise<AdminUserM | null>;

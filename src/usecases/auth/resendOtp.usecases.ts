@@ -1,6 +1,8 @@
-import { UserRepository } from 'src/domain/repositories/users/userRepository.interface';
-import { ResendOtpDto } from 'src/infrastructure/common/dto/user/resend-otp.dto';
-import { ValidateEmailDto } from 'src/infrastructure/common/dto/user/validate-email.dto';
+//import { UserRepository } from 'src/domain/repositories/users/userRepository.interface';
+import { UserRepository } from '../../domain/repositories/users/userRepository.interface';
+//import { ResendOtpDto } from 'src/infrastructure/common/dto/user/resend-otp.dto';
+import { ResendOtpDto } from '../../infrastructure/common/dto/user/resend-otp.dto';
+
 
 export class ResendOtpUsecases {
   constructor(private readonly userRepository: UserRepository) {}

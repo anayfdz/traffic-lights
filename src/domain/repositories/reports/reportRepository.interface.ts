@@ -1,4 +1,4 @@
-import { ReportM } from "src/domain/model/reports/report";
+import { ReportM } from "../../model/reports/report";
 
 export interface IReportRepository {
     createReport(reportData: ReportM): Promise<ReportM>;

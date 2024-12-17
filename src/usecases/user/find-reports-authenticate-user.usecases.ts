@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseReportRepository } from 'src/infrastructure/repositories/reports/report.repository';
-import { DatabaseUserRepository } from 'src/infrastructure/repositories/users/user.repository';
+//import { DatabaseReportRepository } from 'src/infrastructure/repositories/reports/report.repository';
+import { DatabaseReportRepository } from '../../infrastructure/repositories/reports/report.repository';
+
+//import { DatabaseUserRepository } from 'src/infrastructure/repositories/users/user.repository';
+import { DatabaseUserRepository } from '../../infrastructure/repositories/users/user.repository';
+
 
 @Injectable()
 export class FindReportsUserUseCase {

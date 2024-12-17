@@ -2,6 +2,7 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { ExecutionContext, INestApplication } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
+//import { UseCaseProxy } from '../src/infrastructure/usecases-proxy/usecases-proxy';
 import { UseCaseProxy } from '../src/infrastructure/usecases-proxy/usecases-proxy';
 import { UsecasesProxyModule } from '../src/infrastructure/usecases-proxy/usecases-proxy.module';
 import { LoginUseCases } from '../src/usecases/auth/login.usecases';

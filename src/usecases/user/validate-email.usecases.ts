@@ -1,5 +1,8 @@
-import { UserRepository } from "src/domain/repositories/users/userRepository.interface";
-import { ValidateEmailDto } from "src/infrastructure/common/dto/user/validate-email.dto";
+//import { UserRepository } from "src/domain/repositories/users/userRepository.interface";
+import { UserRepository } from "../../domain/repositories/users/userRepository.interface";
+//import { ValidateEmailDto } from "src/infrastructure/common/dto/user/validate-email.dto";
+import { ValidateEmailDto } from "../../infrastructure/common/dto/user/validate-email.dto";
+
 
 export class ValidateEmailUsecases {
     constructor(private readonly userRepository: UserRepository) {

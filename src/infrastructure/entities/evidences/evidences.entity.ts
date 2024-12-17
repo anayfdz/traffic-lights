@@ -1,6 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Report } from '../reports/report.entity';
-import { FileType } from 'src/domain/model/evidences/evidence';
+//import { FileType } from 'src/domain/model/evidences/evidence';
+import { FileType } from '../../../domain/model/evidences/evidence';
+
 
 @Entity('evidences')
 export class Evidence {

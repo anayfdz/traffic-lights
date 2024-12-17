@@ -106,5 +106,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "overrides": {
+  "glob": "7.2.3"
+}
 }

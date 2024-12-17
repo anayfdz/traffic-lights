@@ -1,4 +1,5 @@
-import { TrafficLightM } from "src/domain/model/traffic-lights/trafficLight";
+//import { TrafficLightM } from "src/domain/model/traffic-lights/trafficLight";
+import { TrafficLightM } from "../../model/traffic-lights/trafficLight";
 
 export interface ITrafficLightRepository {
   create(trafficLight: TrafficLightM): Promise<TrafficLightM>;

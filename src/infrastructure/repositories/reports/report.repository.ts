@@ -1,15 +1,24 @@
-import { Report } from 'src/infrastructure/entities/reports/report.entity';
+//import { Report } from 'src/infrastructure/entities/reports/report.entity';
+import { Report } from '../../../infrastructure/entities/reports/report.entity';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IReportRepository } from 'src/domain/repositories/reports/reportRepository.interface';
-import { TrafficLight } from 'src/infrastructure/entities/traffic-lights/trafficLight.entity';
-import { User } from 'src/infrastructure/entities/users/user.entity';
-import { Evidence } from 'src/infrastructure/entities/evidences/evidences.entity';
-import { ReportM, Status } from 'src/domain/model/reports/report';
-import { UserM } from 'src/domain/model/users/user';
-import { EvidenceM, FileType } from 'src/domain/model/evidences/evidence';
-import { TrafficLightM } from 'src/domain/model/traffic-lights/trafficLight';
+//import { IReportRepository } from 'src/domain/repositories/reports/reportRepository.interface';
+import { IReportRepository } from '../../../domain/repositories/reports/reportRepository.interface';
+//import { TrafficLight } from 'src/infrastructure/entities/traffic-lights/trafficLight.entity';
+import { TrafficLight } from '../../../infrastructure/entities/traffic-lights/trafficLight.entity';
+//import { User } from 'src/infrastructure/entities/users/user.entity';
+import { User } from '../../../infrastructure/entities/users/user.entity';
+//import { Evidence } from 'src/infrastructure/entities/evidences/evidences.entity';
+import { Evidence } from '../../../infrastructure/entities/evidences/evidences.entity';
+import { ReportM, Status } from '../../../domain/model/reports/report';
+//import { UserM } from 'src/domain/model/users/user';
+import { UserM } from '../../../domain/model/users/user';
+//import { EvidenceM, FileType } from 'src/domain/model/evidences/evidence';
+import { EvidenceM, FileType } from '../../../domain/model/evidences/evidence';
+//import { TrafficLightM } from 'src/domain/model/traffic-lights/trafficLight';
+import { TrafficLightM } from '../../../domain/model/traffic-lights/trafficLight';
+
 
 @Injectable()
 export class DatabaseReportRepository implements IReportRepository {

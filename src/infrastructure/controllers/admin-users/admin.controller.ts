@@ -1,12 +1,19 @@
 import { BadRequestException, Body, Controller, Inject, Post, Request, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Roles } from "src/infrastructure/common/decorators/roles.decorator";
-import { LoginAdminDto } from "src/infrastructure/common/dto/admin-user/login-admin.dto";
-import { JwtAuthGuard } from "src/infrastructure/common/guards/jwtAuth.guard";
-import { RolesGuard } from "src/infrastructure/common/guards/roles.guard";
-import { UseCaseProxy } from "src/infrastructure/usecases-proxy/usecases-proxy";
-import { UsecasesProxyModule } from "src/infrastructure/usecases-proxy/usecases-proxy.module";
-import { LoginAdminUseCases } from "src/usecases/admin-users/login-admin.usecases";
+//import { Roles } from "src/infrastructure/common/decorators/roles.decorator";
+import { Roles } from "../../../infrastructure/common/decorators/roles.decorator";
+//import { LoginAdminDto } from "src/infrastructure/common/dto/admin-user/login-admin.dto";
+import { LoginAdminDto } from "../../../infrastructure/common/dto/admin-user/login-admin.dto";
+//import { JwtAuthGuard } from "src/infrastructure/common/guards/jwtAuth.guard";
+import { JwtAuthGuard } from "../../common/guards/jwtAuth.guard";
+//import { RolesGuard } from "src/infrastructure/common/guards/roles.guard";
+import { RolesGuard } from "../../common/guards/roles.guard";
+//import { UseCaseProxy } from "src/infrastructure/usecases-proxy/usecases-proxy";
+import { UseCaseProxy } from "../../../infrastructure/usecases-proxy/usecases-proxy";
+//import { UsecasesProxyModule } from "src/infrastructure/usecases-proxy/usecases-proxy.module";
+import { UsecasesProxyModule } from ".././../usecases-proxy/usecases-proxy.module";
+//import { LoginAdminUseCases } from "src/usecases/admin-users/login-admin.usecases";
+import { LoginAdminUseCases } from "../../../usecases/admin-users/login-admin.usecases";
 //import { Request } from 'express';
 import { Request as ExpressRequest } from 'express';
 @Controller('api/admin')

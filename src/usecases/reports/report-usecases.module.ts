@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ReportModule } from 'src/infrastructure/repositories/reports/report.module';
-import { TrafficModule } from 'src/infrastructure/repositories/traffic-lights/traffic.module';
+//import { ReportModule } from 'src/infrastructure/repositories/reports/report.module';
+import { ReportModule } from '../../infrastructure/repositories/reports/report.module';
+//import { TrafficModule } from 'src/infrastructure/repositories/traffic-lights/traffic.module';
+import { TrafficModule } from '../../infrastructure/repositories/traffic-lights/traffic.module';
 import { CreateTrafficLightUseCase } from '../traffic-lights/create-traffic-light.usecase';
 
 @Module({

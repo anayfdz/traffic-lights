@@ -1,9 +1,9 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ITrafficLightRepository } from '../../domain/repositories/traffic-lights/trafficLightRepository.interface';
-import { TrafficLight } from 'src/infrastructure/entities/traffic-lights/trafficLight.entity';
-import { CreateTrafficLightDto } from 'src/infrastructure/common/dto/traffic-lights/create-traffic-light.dto';
-import { TrafficLightM } from 'src/domain/model/traffic-lights/trafficLight';
+import { TrafficLight } from '../../infrastructure/entities/traffic-lights/trafficLight.entity';
+import { CreateTrafficLightDto } from '../../infrastructure/common/dto/traffic-lights/create-traffic-light.dto';
+import { TrafficLightM } from '../../domain/model/traffic-lights/trafficLight';
 
 @Injectable()
 export class CreateTrafficLightUseCase {
