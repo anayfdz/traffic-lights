@@ -2,7 +2,7 @@
 
 This project is an API designed to manage traffic light reports. The app allows users to report, track, and visualize traffic light issues in their area. Users can include evidence (photos or videos) and comments. Administrators can manage reports, assign them to specific traffic lights, and mark their resolution.
 
-The application is built using **NestJS**, and PostgreSQL is used as the database, which runs in a Docker container. Environment variables are configured in a `.env` file, and API documentation is available via Swagger UI.
+The application is built using **NestJS**, and PostgreSQL is used as the database, which runs in a Docker container. Environment variables are configured in a `local.env` file, and API documentation is available via Swagger UI.
 
 ## Key Features of the API
 
