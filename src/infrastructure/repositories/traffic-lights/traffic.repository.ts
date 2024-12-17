@@ -84,7 +84,7 @@ export class DatabaseTrafficLightRepository implements ITrafficLightRepository {
     existingTrafficLight.department = trafficLight.department;
     existingTrafficLight.province = trafficLight.province;
     existingTrafficLight.district = trafficLight.district;
-    existingTrafficLight.location = { type: 'Point', coordinates: [trafficLight.longitude, trafficLight.latitude] }; // Actualizando la ubicación
+    existingTrafficLight.location = { type: 'Point', coordinates: [trafficLight.longitude, trafficLight.latitude] };
 
     const updatedTrafficLight = await this.trafficLightRepository.save(existingTrafficLight);
     return this.toTrafficLightM(updatedTrafficLight);

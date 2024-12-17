@@ -3,7 +3,9 @@ import {
   Controller,
   Get,
   Inject,
+  Param,
   Post,
+  Put,
   Query,
   Request,
   UploadedFile,
@@ -28,6 +30,10 @@ import { CreateTrafficLightUseCase } from 'src/usecases/traffic-lights/create-tr
 import { RolesGuard } from 'src/infrastructure/common/guards/roles.guard';
 import { Roles } from 'src/infrastructure/common/decorators/roles.decorator';
 import { JwtAdminAuthGuard } from 'src/infrastructure/common/guards/JwtAuthAdmin.guard';
+import { UpdateTrafficLightDto } from 'src/infrastructure/common/dto/traffic-lights/update-traffic-light.dto';
+import { UpdateTrafficLightUseCase } from 'src/usecases/traffic-lights/update-traffic-light.usecase';
+import { NearbyTrafficLightsDto } from 'src/infrastructure/common/dto/traffic-lights/nearby-traffic-lights.dto';
+import { GetNearbyTrafficLightsUseCase } from 'src/usecases/traffic-lights/get-nearby-traffic-lights.usecase';
 @Controller('api')
 export class TrafficLightController {
   constructor(
@@ -37,6 +43,10 @@ export class TrafficLightController {
     private readonly filterTrafficLightsUseCase: UseCaseProxy<FilterTrafficLightsUseCase>,
     @Inject(UsecasesProxyModule.CreateTrafficLightUseCaseProxy)
     private readonly createTrafficLightUseCase: UseCaseProxy<CreateTrafficLightUseCase>,
+    @Inject(UsecasesProxyModule.UpdateTrafficLightUseCaseProxy)
+    private readonly updateTrafficLightUseCase: UseCaseProxy<UpdateTrafficLightUseCase>,
+    @Inject(UsecasesProxyModule.GetNearbyTrafficLightsUseCaseProxy)
+    private readonly getTrafficLightsUseCase: UseCaseProxy<GetNearbyTrafficLightsUseCase>
   ) {}
 
   @Post('traffic-lights/report')
@@ -87,10 +97,10 @@ export class TrafficLightController {
       .getInstance()
       .execute(filterTrafficLightsDto.department, filterTrafficLightsDto.province, filterTrafficLightsDto.district);
   }
-  // @Get('traffic-lights/nearby')
-  // async getNearbyTrafficLights(@Query() nearbyTrafficLightsDto: NearbyTrafficLightsDto) {
-  //     return this.trafficLightService.getNearbyTrafficLights(nearbyTrafficLightsDto);
-  // }
+  @Get('traffic-lights/nearby')
+  async getNearbyTrafficLights(@Query() nearbyTrafficLightsDto: NearbyTrafficLightsDto) {
+      return await this.getTrafficLightsUseCase.getInstance().execute(nearbyTrafficLightsDto);
+  }
 
   @Post('traffic-lights')
   @UseGuards(JwtAdminAuthGuard)
@@ -100,15 +110,14 @@ export class TrafficLightController {
   }
 
   // actualizar semaforo solo admin
-  // @Put(':id')
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles('admin')
-  // async update(
-  //   @Param('id') id: number,
-  //   @Body() updateTrafficLightDto: CreateTrafficLightDto
-  // ) {
-  //   return await this.trafficLightService.update(id, updateTrafficLightDto);
-  // }
+  @Put(':id')
+  @UseGuards(JwtAdminAuthGuard)
+  async update(
+    @Param('id') id: number,
+    @Body() updateTrafficLightDto: UpdateTrafficLightDto
+  ) {
+    return await this.updateTrafficLightUseCase.getInstance().execute(id, updateTrafficLightDto);
+  }
 
   // eliminar semaforo solo admins
   // @Delete(':id')
