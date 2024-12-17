@@ -98,6 +98,7 @@ constructor(
     return this.toReportM(updatedReport) as ReportM;
   }
 
+
   async deleteReport(id: number): Promise<void> {
     const reportEntity = await this.reportEntityRepository.findOne({ where: { id } });
     if (!reportEntity) {

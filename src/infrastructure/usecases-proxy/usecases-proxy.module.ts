@@ -55,8 +55,9 @@ import { UpdateTrafficLightUseCase } from '../../usecases/traffic-lights/update-
 import { GetNearbyTrafficLightsUseCase } from '../../usecases/traffic-lights/get-nearby-traffic-lights.usecase';
 //import { DeleteTrafficLightUseCase } from 'src/usecases/traffic-lights/delete-traffic-light.usecase';
 import { DeleteTrafficLightUseCase } from '../../usecases/traffic-lights/delete-traffic-light.usecase';
-
-
+import { FindUserUseCase } from '../../usecases/user/Find-users.usecases';
+import { UpdateUserUseCase } from '../../usecases/user/update-user.usecases';
+import { DeleteUserUseCase} from '../../usecases/user/delete-user.usecases';
 @Module({
   imports: [
     LoggerModule,
@@ -82,7 +83,9 @@ export class UsecasesProxyModule {
   static REGISTER_USECASES_PROXY = 'RegisterUseCasesProxy';
   static VALIDATE_USECASES_EMAIL_PROXY = 'ValidateEmailUsecasesProxy';
   static FIND_REPORTS_USERS_USECASES_PROXY = 'FindReportsUsersUsecasesProxy';
-
+  static FindUserUseCaseProxy = 'FindUserUseCaseProxy';
+  static UpdateUserUseCaseProxy = 'UpdateUserUseCaseProxy';
+  static DeleteUserUseCaseProxy = 'DeleteUserUseCaseProxy';
   // mail
   static MAIL_SERVICE = 'MailModule';
 
@@ -153,6 +156,21 @@ export class UsecasesProxyModule {
           inject: [OtpService],
           provide: UsecasesProxyModule.MAIL_SERVICE,
           useFactory: () => new UseCaseProxy(new MailModule()),
+        },
+        {
+          inject: [DatabaseUserRepository],
+          provide: UsecasesProxyModule.FindUserUseCaseProxy,
+          useFactory: (userRepo: DatabaseUserRepository) => new FindUserUseCase(userRepo)
+        },
+        {
+          inject: [DatabaseUserRepository],
+          provide: UsecasesProxyModule.UpdateUserUseCaseProxy,
+          useFactory: (userRepo: DatabaseUserRepository) => new UpdateUserUseCase(userRepo)
+        },
+        {
+          inject: [DatabaseUserRepository],
+          provide: UsecasesProxyModule.DeleteUserUseCaseProxy,
+          useFactory: (userRepo: DatabaseUserRepository) => new DeleteUserUseCase(userRepo)
         },
         // Report
         {
@@ -225,6 +243,9 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.MAIL_SERVICE,
         UsecasesProxyModule.REGISTER_USECASES_PROXY,
         UsecasesProxyModule.VALIDATE_USECASES_EMAIL_PROXY,
+        UsecasesProxyModule.FindUserUseCaseProxy,
+        UsecasesProxyModule.UpdateUserUseCaseProxy,
+        UsecasesProxyModule.DeleteUserUseCaseProxy,
         UsecasesProxyModule.ReportTrafficLightUseCaseProxy,
         UsecasesProxyModule.CreateTrafficLightUseCaseProxy,
         UsecasesProxyModule.EvidencesUseCasesProxy,

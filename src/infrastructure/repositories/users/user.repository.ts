@@ -27,6 +27,7 @@ import { LoginDto } from '../../../infrastructure/common/dto/auth/login.dto';
 //import { JwtTokenService } from 'src/infrastructure/services/jwt/jwt.service';
 import { JwtTokenService } from '../../../infrastructure/services/jwt/jwt.service';
 import { JwtService } from '@nestjs/jwt';
+import { UpdateUserDto } from "../../../infrastructure/common/dto/user/update-user.dto";
 
 @Injectable()
 export class DatabaseUserRepository implements UserRepository {
@@ -120,6 +121,33 @@ export class DatabaseUserRepository implements UserRepository {
       return null;
     }
     return true
+  }
+  async findAllUsers(): Promise<UserM[]> {
+    const users = await this.userEntityRepository.find();
+    return users.map((user) => this.toUser(user));
+  }
+
+  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<UserM> {
+    const userEntity = await this.userEntityRepository.findOne({ where: { id } });
+    if (!userEntity) {
+      throw new Error('User not found');
+    }
+    userEntity.name = updateUserDto.name || userEntity.name;
+    userEntity.last_name = updateUserDto.last_name || userEntity.last_name;
+    userEntity.nickname = updateUserDto.nickname || userEntity.nickname;
+    userEntity.email = updateUserDto.email || userEntity.email;
+    userEntity.status = updateUserDto.status || userEntity.status;
+
+    const updatedUser = await this.userEntityRepository.save(userEntity);
+    return this.toUser(updatedUser);
+  }
+
+  async deleteUser(id: number): Promise<void> {
+    const userEntity = await this.userEntityRepository.findOne({ where: { id } });
+    if (!userEntity) {
+      throw new Error('User not found');
+    }
+    await this.userEntityRepository.remove(userEntity);
   }
 
   // Validar usuario por correo electrónico
