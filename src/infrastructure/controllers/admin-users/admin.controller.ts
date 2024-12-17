@@ -30,7 +30,6 @@ export class AdminController {
     private readonly adminUsecaseProxy: UseCaseProxy<LoginAdminUseCases>,
     ){} 
     @Post('login')
-     @ApiBearerAuth()
      @ApiBody({ type: LoginAdminDto })
       @ApiOperation({ description: 'Iniciar sesión de un administrador' })
       @ApiResponse({ status: 200, description: 'Login successful' })
@@ -50,6 +49,14 @@ export class AdminController {
     @Post('logout')
     @UseGuards(JwtAuthGuard)
     @ApiOperation({ summary: 'Cerrar sesión de un administrador' })
+    @ApiResponse({
+      status: 200,
+      description: 'Logout exitoso',
+    })
+    @ApiResponse({
+      status: 401,
+      description: 'No autorizado',
+    })
     async logout(@Request() request: ExpressRequest) {
       request.res.setHeader('Set-Cookie', 'Authentication=; HttpOnly; Path=/; Max-Age=0;');
       request.res.setHeader('Set-Cookie', 'Refresh=; HttpOnly; Path=/; Max-Age=0;');

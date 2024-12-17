@@ -46,7 +46,11 @@ import { NearbyTrafficLightsDto } from '../../../infrastructure/common/dto/traff
 import { GetNearbyTrafficLightsUseCase } from '../../../usecases/traffic-lights/get-nearby-traffic-lights.usecase';
 //import { DeleteTrafficLightUseCase } from 'src/usecases/traffic-lights/delete-traffic-light.usecase';
 import { DeleteTrafficLightUseCase } from '../../../usecases/traffic-lights/delete-traffic-light.usecase';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { TrafficLight } from 'src/infrastructure/entities/traffic-lights/trafficLight.entity';
+import { TrafficLightM } from 'src/domain/model/traffic-lights/trafficLight';
 
+@ApiTags('traffic-lights')
 @Controller('api')
 export class TrafficLightController {
   constructor(
@@ -77,6 +81,28 @@ export class TrafficLightController {
     }),
   )
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Reportar el estado de un semáforo' })
+  @ApiBody({
+    description: 'Reporte del semáforo, incluyendo su estado, ubicación, y evidencias',
+    type: CreateReportDto,
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Reporte creado con éxito',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Solicitud incorrecta, datos inválidos',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autorizado, se requiere autenticación',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Error interno del servidor',
+  })
   async reportTrafficLight(
     @Body() createReportDto: CreateReportDto,
     @Request() req: any,
@@ -106,19 +132,90 @@ export class TrafficLightController {
   }
 
   @Get('traffic-lights/filter')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Filter traffic lights by district, province, and department' })
+  @ApiQuery({
+    name: 'district',
+    required: true,
+    description: 'The district of the traffic light (e.g., Miraflores)',
+    type: String,
+  })
+  @ApiQuery({
+    name: 'province',
+    required: true,
+    description: 'The province where the traffic light is located (e.g., Lima)',
+    type: String,
+  })
+  @ApiQuery({
+    name: 'department',
+    required: true,
+    description: 'The department where the traffic light is located (e.g., Lima)',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Filtered list of traffic lights',
+    type: [TrafficLightM],
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
   async filterTrafficLights(@Query() filterTrafficLightsDto: FilterTrafficLightsDto) {
     console.log('DTO recibido:', filterTrafficLightsDto);
     return await this.filterTrafficLightsUseCase
       .getInstance()
       .execute(filterTrafficLightsDto.department, filterTrafficLightsDto.province, filterTrafficLightsDto.district);
   }
+
+ 
+
   @Get('traffic-lights/nearby')
+  @ApiOperation({ description: 'Obtener semáforos cercanos' })
+  @ApiQuery({ name: 'latitude', type: 'number', description: 'Latitud del punto central para la búsqueda', required: true })
+  @ApiQuery({ name: 'longitude', type: 'number', description: 'Longitud del punto central para la búsqueda', required: true })
+  @ApiQuery({ name: 'radius', type: 'number', description: 'Radio en kilómetros para la búsqueda', required: true })
+  @ApiResponse({
+    status: 200,
+    description: 'Listado de semáforos cercanos',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          _id: { type: 'number' },
+          _latitude: { type: 'number' },
+          _longitude: { type: 'number' },
+          _type: { type: 'string' },
+          _department: { type: 'string' },
+          _province: { type: 'string' },
+          _district: { type: 'string' },
+          _location: {
+            type: 'object',
+            properties: {
+              latitude: { type: 'number' },
+              longitude: { type: 'number' }
+            }
+          },
+          _createdAt: { type: 'string', format: 'date-time' },
+          _updatedAt: { type: 'string', format: 'date-time' },
+          _reports: { type: 'array', items: { type: 'object' } }
+        }
+      }
+    }
+  })
   async getNearbyTrafficLights(@Query() nearbyTrafficLightsDto: NearbyTrafficLightsDto) {
       return await this.getTrafficLightsUseCase.getInstance().execute(nearbyTrafficLightsDto);
   }
 
   @Post('traffic-lights')
   @UseGuards(JwtAdminAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a new traffic light' })
+  @ApiBody({
+    description: 'Details of the traffic light to be created',
+    type: CreateTrafficLightDto,
+  })
+  @ApiResponse({ status: 201, description: 'Traffic light created successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
   async create(@Body() createTrafficLightDto: CreateTrafficLightDto) {
     console.log('Solicitud recibida:', createTrafficLightDto); 
     return await this.createTrafficLightUseCase.getInstance().execute(createTrafficLightDto);

@@ -5,54 +5,54 @@ import { Status } from '../../../../domain/model/reports/report';
 
 
 export class CreateReportDto {
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: false, description: 'ID del semáforo reportado' })
   @IsOptional()
   @Transform(({ value }) => parseInt(value, 10))
   @IsInt()
   traffic_light_id?: number;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Latitud del semáforo reportado' })
   @Transform(({ value }) => parseFloat(value))
   @IsNumber()
   latitude: number;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Tipo de reporte' })
   @IsString()
   type: string;
 
-  @ApiProperty()
+  @ApiProperty({description: 'Provincia donde se reporta el semáforo'})
   @IsString()
   province: string;
 
   
-  @ApiProperty()
+  @ApiProperty({ description: 'Distrito donde se reporta el semáforo'})
   @IsString()
   district: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Longitud del semáforo reportado'})
   @Transform(({ value }) => parseFloat(value))
   @IsNumber()
   longitude: number;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Estado del semáforo'})
   @IsEnum(Status)
   status: Status;
 
-  @ApiProperty()
+  @ApiProperty({description: 'Comentarios adicionales sobre el reporte', required: false})
   @IsString()
   comments: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Descripción del reporte' })
   @IsString()
   description: string;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: false, description: 'Fecha y hora del reporte', format: 'date-time' })
   @IsOptional()
   @Transform(({ value }) => value ? new Date(value) : value) 
   @IsDate()
   reported_at?: Date;
 
-  @ApiProperty({ type: [Object] })
+  @ApiProperty({ type: [Object], description: 'Evidencias en forma de archivos (imágenes)', required: false })
   @IsArray()
   @IsOptional()
   evidences: { filePath: string, fileType: string }[];

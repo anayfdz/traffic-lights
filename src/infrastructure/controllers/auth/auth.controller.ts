@@ -59,7 +59,11 @@ export class AuthController {
 
   @Post('logout')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ description: 'logout' })
+  @ApiOperation({ description: 'Logout and invalidate JWT tokens' })
+  @ApiResponse({
+    status: 200,
+    description: 'Logout successful',
+  })
   async logout(@Request() request: any) {
     const cookie = await this.logoutUsecaseProxy.getInstance().execute();
     request.res.setHeader('Set-Cookie', cookie);
@@ -67,6 +71,10 @@ export class AuthController {
   }
 
   @Post('resend-otp') 
+  @ApiOperation({ description: 'Resend OTP' })
+  @ApiBody({ type: ResendOtpDto })
+  @ApiResponse({ status: 200, description: 'OTP resent successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid request' })
   async resendOtp(@Body() resendOtpDto: ResendOtpDto): Promise<any> { 
     await this.resendUsecaseProxy.getInstance().execute(resendOtpDto)
   }
