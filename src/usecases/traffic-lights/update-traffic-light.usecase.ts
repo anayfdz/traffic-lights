@@ -25,12 +25,6 @@ export class UpdateTrafficLightUseCase {
     if (updateTrafficLightDto.department !== undefined) trafficLight.department = updateTrafficLightDto.department;
     if (updateTrafficLightDto.province !== undefined) trafficLight.province = updateTrafficLightDto.province;
     if (updateTrafficLightDto.district !== undefined) trafficLight.district = updateTrafficLightDto.district;
-    // if (trafficLight.latitude !== undefined && trafficLight.longitude !== undefined) {
-    //   trafficLight.location = {
-    //     type: 'Point',
-    //     coordinates: [trafficLight.longitude, trafficLight.latitude],
-    //   } as any;
-    // }
 
     if (trafficLight.latitude !== undefined && trafficLight.longitude !== undefined) {
         trafficLight.location = {

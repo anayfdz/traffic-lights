@@ -50,14 +50,11 @@ export class DatabaseUserRepository implements UserRepository {
 
     const savedUser = await this.userEntityRepository.save(userEntity);
 
-    // OTP para este usuario
     await this.otpService.generateOtp(savedUser.id);
 
-    // Retornamos el usuario creado
     return this.toUser(savedUser);
   }
 
-  // Obtener usuario por id
 
   async getUserById(userId: number): Promise<User> {
     return await this.userEntityRepository.findOne({ where: { id: userId } });
@@ -73,7 +70,6 @@ export class DatabaseUserRepository implements UserRepository {
   }
 
 
-  // login
 
   async loginUser(loginDto: LoginDto): Promise<{access_token: string}> {
     const user = await this.userEntityRepository.findOne({where: {email: loginDto.email}})
@@ -179,7 +175,6 @@ export class DatabaseUserRepository implements UserRepository {
         reportEntity.trafficLight.reports.map((report) => this.toReport(report)),
       )
       : null;
-    //const userInstance = new UserM(reportEntity.user.id)
     const status = Status[reportEntity.status as keyof typeof Status];
 
     return new ReportM(

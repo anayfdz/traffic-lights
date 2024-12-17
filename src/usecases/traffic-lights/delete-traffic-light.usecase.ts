@@ -1,14 +1,16 @@
-// import { Injectable } from '@nestjs/common';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Repository } from 'typeorm';
-// import { TrafficLight } from '../../entities/traffic-lights/traffic-light.entity';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ITrafficLightRepository } from 'src/domain/repositories/traffic-lights/trafficLightRepository.interface';
+import { TrafficLight } from 'src/infrastructure/entities/traffic-lights/trafficLight.entity';
 
-// @Injectable()
-// export class DeleteTrafficLightUseCase {
-//   constructor(
-//     @InjectRepository(TrafficLight)
-//     private readonly trafficLightRepository: Repository<TrafficLight>,
-//   ) {}
+@Injectable()
+export class DeleteTrafficLightUseCase {
+  constructor(
+    @InjectRepository(TrafficLight)
+    private readonly trafficLightRepository: ITrafficLightRepository,
+  ) {}
 
-//   async execute(id: number): Promise<void> {
-//     await
+  async execute(id: number): Promise<void> {
+    await this.trafficLightRepository.delete(id);
+  }
+}

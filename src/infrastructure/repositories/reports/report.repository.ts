@@ -100,10 +100,8 @@ constructor(
 
   private toReportM(reportEntity: Report | Report[]): ReportM | ReportM[] {
     if (Array.isArray(reportEntity)) {
-      // Si es un array de reportes, convertimos cada uno de ellos.
       return reportEntity.map((report) => this.toReportM(report) as ReportM);
     } else{
-      // Si es un solo reporte, lo convertimos normalmente.
     const location =reportEntity.trafficLight && reportEntity.trafficLight.location ?
     {
       latitude: reportEntity.trafficLight.location.coordinates[1],

@@ -194,12 +194,10 @@
   //     it('should return an array to invalid the cookie', async () => {
   //       const user: UserM = {
   //         id: 1,
-  //         username: 'username',
+  //         name: 'username',
   //         password: 'password',
-  //         createDate: new Date(),
-  //         updatedDate: new Date(),
-  //         lastLogin: null,
-  //         hashRefreshToken: 'refresh token',
+  //         createdAt: new Date(),
+  //         updatedAt: new Date(),
   //       };
   //       (adminUserRepo.getUserByUsername as jest.Mock).mockReturnValue(Promise.resolve(user));
 

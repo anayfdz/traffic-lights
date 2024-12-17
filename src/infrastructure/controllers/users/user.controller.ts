@@ -46,7 +46,4 @@ export class UserController {
     const userId = req.user.sub;
     return await this.findReportsUserUseCase.getInstance().execute(userId);
   }
-    // @Post('logout') async logout() { 
-    //   return this.userService.logout(); 
-    // }
 }

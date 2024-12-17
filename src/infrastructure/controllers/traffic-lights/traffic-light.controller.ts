@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -22,18 +23,15 @@ import { CreateReportDto } from 'src/infrastructure/common/dto/report/create-rep
 import * as path from 'path';
 import { JwtAuthGuard } from 'src/infrastructure/common/guards/jwtAuth.guard';
 import { CreateTrafficLightDto } from 'src/infrastructure/common/dto/traffic-lights/create-traffic-light.dto';
-//import { AdminGuard } from '../../common/guards/admin.guard';
 import { FilterTrafficLightsDto } from 'src/infrastructure/common/dto/traffic-lights/filter-traffic-lights.dto';
 import { FilterTrafficLightsUseCase } from 'src/usecases/traffic-lights/filter-traffic-lights.usecases';
-import { In } from 'typeorm';
 import { CreateTrafficLightUseCase } from 'src/usecases/traffic-lights/create-traffic-light.usecase';
-import { RolesGuard } from 'src/infrastructure/common/guards/roles.guard';
-import { Roles } from 'src/infrastructure/common/decorators/roles.decorator';
 import { JwtAdminAuthGuard } from 'src/infrastructure/common/guards/JwtAuthAdmin.guard';
 import { UpdateTrafficLightDto } from 'src/infrastructure/common/dto/traffic-lights/update-traffic-light.dto';
 import { UpdateTrafficLightUseCase } from 'src/usecases/traffic-lights/update-traffic-light.usecase';
 import { NearbyTrafficLightsDto } from 'src/infrastructure/common/dto/traffic-lights/nearby-traffic-lights.dto';
 import { GetNearbyTrafficLightsUseCase } from 'src/usecases/traffic-lights/get-nearby-traffic-lights.usecase';
+import { DeleteTrafficLightUseCase } from 'src/usecases/traffic-lights/delete-traffic-light.usecase';
 @Controller('api')
 export class TrafficLightController {
   constructor(
@@ -46,7 +44,9 @@ export class TrafficLightController {
     @Inject(UsecasesProxyModule.UpdateTrafficLightUseCaseProxy)
     private readonly updateTrafficLightUseCase: UseCaseProxy<UpdateTrafficLightUseCase>,
     @Inject(UsecasesProxyModule.GetNearbyTrafficLightsUseCaseProxy)
-    private readonly getTrafficLightsUseCase: UseCaseProxy<GetNearbyTrafficLightsUseCase>
+    private readonly getTrafficLightsUseCase: UseCaseProxy<GetNearbyTrafficLightsUseCase>,
+    @Inject(UsecasesProxyModule.DeleteTrafficLightUseCaseProxy)
+    private readonly deleteTrafficLightUseCaseProxy: UseCaseProxy<DeleteTrafficLightUseCase>
   ) {}
 
   @Post('traffic-lights/report')
@@ -109,7 +109,6 @@ export class TrafficLightController {
     return await this.createTrafficLightUseCase.getInstance().execute(createTrafficLightDto);
   }
 
-  // actualizar semaforo solo admin
   @Put(':id')
   @UseGuards(JwtAdminAuthGuard)
   async update(
@@ -119,11 +118,9 @@ export class TrafficLightController {
     return await this.updateTrafficLightUseCase.getInstance().execute(id, updateTrafficLightDto);
   }
 
-  // eliminar semaforo solo admins
-  // @Delete(':id')
-  // @UseGuards(JwtAuthGuard, RolesGuard)
-  // @Roles('admin')
-  // async delete(@Param('id') id: number) {
-  //   return await this.trafficLightService.delete(id);
-  // }
+  @Delete(':id')
+  @UseGuards(JwtAdminAuthGuard)
+  async delete(@Param('id') id: number) {
+    return await this.deleteTrafficLightUseCaseProxy.getInstance().execute(id);
+  }
 }

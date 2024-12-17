@@ -13,7 +13,6 @@ export class DatabaseTrafficLightRepository implements ITrafficLightRepository {
     private readonly trafficLightRepository: Repository<TrafficLight>,
   ) {}
 
-  // Crear un nuevo semáforo
   async create(trafficLight: CreateTrafficLightDto): Promise<TrafficLightM> {
     const newTrafficLight = this.trafficLightRepository.create({
       latitude: trafficLight.latitude,
@@ -36,7 +35,6 @@ export class DatabaseTrafficLightRepository implements ITrafficLightRepository {
     return trafficLight ? this.toTrafficLightM(trafficLight) : undefined;
   }
 
-  // Encontrar semáforos cercanos a una ubicación dada (latitud, longitud) dentro de un radio
   async findNearby(latitude: number, longitude: number, radius: number): Promise<TrafficLightM[]> {
     const trafficLights = await this.trafficLightRepository
       .createQueryBuilder('trafficLight')
@@ -50,7 +48,6 @@ export class DatabaseTrafficLightRepository implements ITrafficLightRepository {
     return trafficLights.map(this.toTrafficLightM);
   }
 
-  // Filtrar semáforos por departamento, provincia o distrito
   async filterTraffic(department?: string, province?: string, district?: string): Promise<TrafficLightM[]> {
     const queryBuilder = this.trafficLightRepository.createQueryBuilder('tl');
 
@@ -70,7 +67,6 @@ export class DatabaseTrafficLightRepository implements ITrafficLightRepository {
     return trafficLights.map(this.toTrafficLightM);
   }
 
-  // Actualizar un semáforo
   async update(trafficLight: TrafficLightM): Promise<TrafficLightM> {
     const existingTrafficLight = await this.trafficLightRepository.findOne({ where: { id: trafficLight.id } });
 
@@ -90,7 +86,6 @@ export class DatabaseTrafficLightRepository implements ITrafficLightRepository {
     return this.toTrafficLightM(updatedTrafficLight);
   }
 
-  // Eliminar un semáforo por ID
   async delete(id: number): Promise<void> {
     await this.trafficLightRepository.delete(id);
   }
@@ -120,21 +115,5 @@ export class DatabaseTrafficLightRepository implements ITrafficLightRepository {
       trafficLight.created_at,
       trafficLight.updated_at,
     );
-  }
-
-  // Método para calcular la distancia entre dos puntos (en latitud/longitud)
-  private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-    const R = 6371; // Radio de la Tierra en km
-    const dLat = this.degreesToRadians(lat2 - lat1);
-    const dLon = this.degreesToRadians(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.degreesToRadians(lat1)) * Math.cos(this.degreesToRadians(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distancia en km
-  }
-
-  private degreesToRadians(degrees: number): number {
-    return degrees * (Math.PI / 180);
   }
 }

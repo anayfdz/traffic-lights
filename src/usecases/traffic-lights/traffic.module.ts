@@ -8,10 +8,11 @@ import { DatabaseTrafficLightRepository } from 'src/infrastructure/repositories/
 import { FilterTrafficLightsUseCase } from './filter-traffic-lights.usecases';
 import { UpdateTrafficLightUseCase } from './update-traffic-light.usecase';
 import { GetNearbyTrafficLightsUseCase } from './get-nearby-traffic-lights.usecase';
+import { DeleteTrafficLightUseCase } from './delete-traffic-light.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TrafficLight])],
-  providers: [DatabaseTrafficLightRepository, CreateTrafficLightUseCase, FilterTrafficLightsUseCase, UpdateTrafficLightUseCase, GetNearbyTrafficLightsUseCase],
-  exports: [CreateTrafficLightUseCase, FilterTrafficLightsUseCase, UpdateTrafficLightUseCase, GetNearbyTrafficLightsUseCase],
+  providers: [DatabaseTrafficLightRepository, CreateTrafficLightUseCase, FilterTrafficLightsUseCase, UpdateTrafficLightUseCase, GetNearbyTrafficLightsUseCase, DeleteTrafficLightUseCase],
+  exports: [CreateTrafficLightUseCase, FilterTrafficLightsUseCase, UpdateTrafficLightUseCase, GetNearbyTrafficLightsUseCase, DeleteTrafficLightUseCase],
 })
 export class TrafficUseCasesModule {}

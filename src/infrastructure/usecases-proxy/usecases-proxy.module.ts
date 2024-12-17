@@ -40,6 +40,7 @@ import { FindReportsUserUseCase } from 'src/usecases/user/find-reports-authentic
 import { FilterTrafficLightsUseCase } from 'src/usecases/traffic-lights/filter-traffic-lights.usecases';
 import { UpdateTrafficLightUseCase } from 'src/usecases/traffic-lights/update-traffic-light.usecase';
 import { GetNearbyTrafficLightsUseCase } from 'src/usecases/traffic-lights/get-nearby-traffic-lights.usecase';
+import { DeleteTrafficLightUseCase } from 'src/usecases/traffic-lights/delete-traffic-light.usecase';
 
 @Module({
   imports: [
@@ -78,6 +79,7 @@ export class UsecasesProxyModule {
   static FilterTrafficLightsUseCaseProxy = 'FilterTrafficLightsUseCaseProxy';
   static UpdateTrafficLightUseCaseProxy = 'UpdateTrafficLightUseCaseProxy';
   static GetNearbyTrafficLightsUseCaseProxy = 'GetNearbyTrafficLightsUseCaseProxy'
+  static DeleteTrafficLightUseCaseProxy = 'DeleteTrafficLightUseCaseProxy'
   // evidence
   static EvidencesUseCasesProxy = 'EvidencesUseCasesProxy';
   // admin
@@ -176,6 +178,12 @@ export class UsecasesProxyModule {
           useFactory: (trafficLight: DatabaseTrafficLightRepository) =>
             new UseCaseProxy(new GetNearbyTrafficLightsUseCase(trafficLight))
         },
+        {
+          inject: [DatabaseTrafficLightRepository],
+          provide: UsecasesProxyModule.DeleteTrafficLightUseCaseProxy,
+          useFactory: (trafficLight: DatabaseTrafficLightRepository) =>
+            new UseCaseProxy(new DeleteTrafficLightUseCase(trafficLight))
+        },
         // evidence
         {
           inject: [DatabaseEvidenceRepository],
@@ -210,6 +218,7 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.FilterTrafficLightsUseCaseProxy,
         UsecasesProxyModule.UpdateTrafficLightUseCaseProxy,
         UsecasesProxyModule.GetNearbyTrafficLightsUseCaseProxy,
+        UsecasesProxyModule.DeleteTrafficLightUseCaseProxy
       ],
     };
   }
