@@ -13,6 +13,7 @@ export class ReportM {
   private _id: number;
   private _user: UserM;
   private _trafficLight: TrafficLightM | null;
+  private _traffic_light_id: number | null
   private _description: string | null;
   private _status: Status;
   private _comments: string | null;
@@ -25,6 +26,7 @@ export class ReportM {
     id: number,
     user: UserM,
     trafficLight: TrafficLightM | null,
+    //traffic_light_id: number | null,
     description: string | null,
     status: Status,
     comments: string | null,
@@ -36,6 +38,7 @@ export class ReportM {
     this._id = id;
     this._user = user;
     this._trafficLight = trafficLight;
+    //this._traffic_light_id = traffic_light_id; 
     this._description = description;
     this._status = status;
     this._comments = comments;
@@ -99,9 +102,17 @@ export class ReportM {
   set trafficLight(value: TrafficLightM | null) {
     this._trafficLight = value;
   }
+  // get traffic_light_id(): number | null {
+  //   return this._traffic_light_id;
+  // }
+
+  // set traffic_light_id(value: number | null) {
+  //   this._traffic_light_id = value;
+  // }
 
   // Método para asignar un semáforo al reporte
   assignTrafficLight(trafficLight: TrafficLightM | null): void {
     this._trafficLight = trafficLight;
+    //this.traffic_light_id = trafficLight ? trafficLight.id : null;
   }
 }

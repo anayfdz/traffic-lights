@@ -24,13 +24,14 @@ import { UpdateTrafficLightUseCase } from '../../../usecases/traffic-lights/upda
 import { GetNearbyTrafficLightsUseCase } from '../../../usecases/traffic-lights/get-nearby-traffic-lights.usecase';
 import { DeleteTrafficLightUseCase } from '../../../usecases/traffic-lights/delete-traffic-light.usecase';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-// import { AssignReportUseCase } from 'src/usecases/reports/assign-report.usecase';
+import { AssignReportUseCase } from 'src/usecases/reports/assign-report.usecase';
 // import { DeleteReportUseCase } from 'src/usecases/reports/delete-report.usecase';
 import { GetReportDetailsUseCase } from 'src/usecases/reports/get-detail-report.usecase';
 // import { ResolveReportUseCase } from 'src/usecases/reports/resolve-report.usecase';
 import { UpdateReportStatusDto } from 'src/infrastructure/common/dto/report/update-report.dto';
 import { ReportM } from '../../../domain/model/reports/report';
 import { GetUserReportsUseCase } from 'src/usecases/reports/get-user-reports.usecase';
+import { ResolveReportUseCase } from 'src/usecases/reports/resolve-report.usecase';
 
 @ApiTags('reports')
 @Controller('api/admin/reports')
@@ -48,16 +49,16 @@ export class ReportController {
     // private readonly getTrafficLightsUseCase: UseCaseProxy<GetNearbyTrafficLightsUseCase>,
     // @Inject(UsecasesProxyModule.DeleteTrafficLightUseCaseProxy)
     // private readonly deleteTrafficLightUseCase: UseCaseProxy<DeleteTrafficLightUseCase>,
-    // @Inject(UsecasesProxyModule.AssignReportUseCaseProxy)
-    // private readonly assignReportUseCase: UseCaseProxy<AssignReportUseCase>,
+    @Inject(UsecasesProxyModule.AssignReportUseCaseProxy)
+    private readonly assignReportUseCase: UseCaseProxy<AssignReportUseCase>,
     // @Inject(UsecasesProxyModule.DeleteReportUseCaseProxy)
     // private readonly deleteReportUseCase: UseCaseProxy<DeleteReportUseCase>,
     @Inject(UsecasesProxyModule.GetReportDetailsUseCaseProxy)
     private readonly getReportDetailsUseCase: UseCaseProxy<GetReportDetailsUseCase>,
     @Inject(UsecasesProxyModule.GetUserReportsUseCaseProxy)
     private readonly getUserReportsUseCase: UseCaseProxy<GetUserReportsUseCase>,
-    // @Inject(UsecasesProxyModule.ResolveReportUseCaseProxy)
-    // private readonly resolveReportUseCase: UseCaseProxy<ResolveReportUseCase>
+    @Inject(UsecasesProxyModule.ResolveReportUseCaseProxy)
+    private readonly resolveReportUseCase: UseCaseProxy<ResolveReportUseCase>
   ) {}
 
   @Get()
@@ -124,45 +125,44 @@ export class ReportController {
     return await this.getReportDetailsUseCase.getInstance().execute(id)
   }
 
-//   // Endpoint para marcar un reporte como resuelto
-//   @Put(':id/resolve')
-//   @UseGuards(JwtAdminAuthGuard)
-//   @ApiBearerAuth()
-//   @ApiOperation({ summary: 'Marcar un reporte como resuelto' })
-//   @ApiResponse({
-//     status: 200,
-//     description: 'Reporte marcado como resuelto con éxito',
-//   })
-//   @ApiResponse({
-//     status: 400,
-//     description: 'Estado no válido',
-//   })
-//   async resolveReport(
-//     @Param('id') id: number,
-//     @Body() updateReportStatusDto: UpdateReportStatusDto,
-//   ) {
-//     return await this.resolveReportUseCase.getInstance().execute(id, updateReportStatusDto);
-//   }
+  @Put(':id/resolve')
+  @UseGuards(JwtAdminAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Marcar un reporte como resuelto' })
+  @ApiResponse({
+    status: 200,
+    description: 'Reporte marcado como resuelto con éxito',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Estado no válido',
+  })
+  async resolveReport(
+    @Param('id') id: number,
+    @Body() body: { status: string },
+  ) {
+    const { status } = body;
+    return await this.resolveReportUseCase.getInstance().execute(id, status);
+  }
 
-//   // Endpoint para asignar un reporte a un semáforo específico
-//   @Put(':id/assign')
-//   @UseGuards(JwtAdminAuthGuard)
-//   @ApiBearerAuth()
-//   @ApiOperation({ summary: 'Asignar un reporte a un semáforo específico' })
-//   @ApiResponse({
-//     status: 200,
-//     description: 'Reporte asignado a semáforo con éxito',
-//   })
-//   @ApiResponse({
-//     status: 404,
-//     description: 'Semáforo no encontrado',
-//   })
-//   async assignReport(
-//     @Param('id') id: number,
-//     @Body() assignReportDto: { traffic_light_id: number },
-//   ) {
-//     return await this.assignReportUseCase.getInstance().execute(id, assignReportDto.traffic_light_id);
-//   }
+  @Put(':id/assign')
+  @UseGuards(JwtAdminAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Asignar un reporte a un semáforo específico' })
+  @ApiResponse({
+    status: 200,
+    description: 'Reporte asignado a semáforo con éxito',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Semáforo no encontrado',
+  })
+  async assignReport(
+    @Param('id') id: number,
+    @Body() assignReportDto: { traffic_light_id: number },
+  ) {
+    return await this.assignReportUseCase.getInstance().execute(id, assignReportDto.traffic_light_id);
+  }
 
 //   // Endpoint para eliminar un reporte específico
 //   @Delete(':id')

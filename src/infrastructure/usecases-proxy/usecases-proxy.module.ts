@@ -58,11 +58,11 @@ import { DeleteTrafficLightUseCase } from '../../usecases/traffic-lights/delete-
 import { FindUserUseCase } from '../../usecases/user/find-users.usecases';
 import { UpdateUserUseCase } from '../../usecases/user/update-user.usecases';
 import { DeleteUserUseCase } from '../../usecases/user/delete-user.usecases';
-//import { AssignReportUseCase } from 'src/usecases/reports/assign-report.usecase';
+import { AssignReportUseCase } from 'src/usecases/reports/assign-report.usecase';
 //import { DeleteReportUseCase } from 'src/usecases/reports/delete-report.usecase';
 import { GetReportDetailsUseCase } from 'src/usecases/reports/get-detail-report.usecase';
 import { GetUserReportsUseCase } from 'src/usecases/reports/get-user-reports.usecase';
-//import { ResolveReportUseCase } from 'src/usecases/reports/resolve-report.usecase';
+import { ResolveReportUseCase } from 'src/usecases/reports/resolve-report.usecase';
 @Module({
   imports: [
     LoggerModule,
@@ -96,11 +96,11 @@ export class UsecasesProxyModule {
 
   // report
   static ReportTrafficLightUseCaseProxy = 'ReportTrafficLightUseCaseProxy';
-  //static AssignReportUseCaseProxy = 'AssignReportUseCaseProxy';
+  static AssignReportUseCaseProxy = 'AssignReportUseCaseProxy';
   //static DeleteReportUseCaseProxy = 'DeleteReportUseCaseProxy';
   static GetReportDetailsUseCaseProxy = 'GetReportDetailsUseCaseProxy';
   static GetUserReportsUseCaseProxy = 'GetUserReportsUseCaseProxy';
-  //static ResolveReportUseCaseProxy = 'ResolveReportUseCaseProxy'
+  static ResolveReportUseCaseProxy = 'ResolveReportUseCaseProxy'
 
   // trafic
   static CreateTrafficLightUseCaseProxy = 'CreateTrafficLightUseCaseProxy';
@@ -192,11 +192,11 @@ export class UsecasesProxyModule {
           provide: UsecasesProxyModule.GetUserReportsUseCaseProxy,
           useFactory: (reportRepo: DatabaseReportRepository) => new UseCaseProxy(new GetUserReportsUseCase(reportRepo)),
         },
-        // {
-        //   inject: [DatabaseReportRepository],
-        //   provide: UsecasesProxyModule.ResolveReportUseCaseProxy,
-        //   useFactory: (reportRepo: DatabaseReportRepository) => new ResolveReportUseCase(reportRepo)
-        // },
+        {
+          inject: [DatabaseReportRepository],
+          provide: UsecasesProxyModule.ResolveReportUseCaseProxy,
+          useFactory: (reportRepo: DatabaseReportRepository) => new UseCaseProxy(new ResolveReportUseCase(reportRepo)),
+        },
         // Report
         {
           inject: [DatabaseReportRepository, DatabaseTrafficLightRepository, CreateTrafficLightUseCase, CreateEvidenceUseCase],
@@ -211,17 +211,17 @@ export class UsecasesProxyModule {
               new ReportTrafficLightUseCase(reportRepo, trafficLight, createTrafficLightUseCase, createEvidenceUseCase),
             ),
         },
-        // {
-        //   inject: [DatabaseReportRepository, DatabaseTrafficLightRepository],
-        //   provide: UsecasesProxyModule.AssignReportUseCaseProxy,
-        //   useFactory: (
-        //     reportRepo: DatabaseReportRepository,
-        //     trafficLight: DatabaseTrafficLightRepository
-        //   ) =>
-        //     new UseCaseProxy(
-        //       new AssignReportUseCase(reportRepo, trafficLight),
-        //     ),
-        // },
+        {
+          inject: [DatabaseReportRepository, DatabaseTrafficLightRepository],
+          provide: UsecasesProxyModule.AssignReportUseCaseProxy,
+          useFactory: (
+            reportRepo: DatabaseReportRepository,
+            trafficLight: DatabaseTrafficLightRepository
+          ) =>
+            new UseCaseProxy(
+              new AssignReportUseCase(reportRepo, trafficLight),
+            ),
+        },
         // {
         //   inject: [DatabaseReportRepository],
         //   provide: UsecasesProxyModule.DeleteReportUseCaseProxy,
@@ -301,11 +301,11 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.UpdateTrafficLightUseCaseProxy,
         UsecasesProxyModule.GetNearbyTrafficLightsUseCaseProxy,
         UsecasesProxyModule.DeleteTrafficLightUseCaseProxy,
-        //UsecasesProxyModule.AssignReportUseCaseProxy,
+        UsecasesProxyModule.AssignReportUseCaseProxy,
         //UsecasesProxyModule.DeleteReportUseCaseProxy,
         UsecasesProxyModule.GetReportDetailsUseCaseProxy,
         UsecasesProxyModule.GetUserReportsUseCaseProxy,
-        //UsecasesProxyModule.ResolveReportUseCaseProxy
+        UsecasesProxyModule.ResolveReportUseCaseProxy
       ],
     };
   }
