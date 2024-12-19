@@ -3,18 +3,18 @@
 // import { Repository } from 'typeorm';
 // import { Report } from '../../infrastructure/entities/reports/report.entity';
 // import { User } from '../../infrastructure/entities/users/user.entity';
+// import { IReportRepository } from '../../domain/repositories/reports/reportRepository.interface';
+// import { UserRepository } from '../../domain/repositories/users/userRepository.interface';
+// import { ReportM } from 'src/domain/model/reports/report';
 
 // @Injectable()
 // export class GetUserReportsUseCase {
 //   constructor(
-//     @InjectRepository(Report)
-//     private readonly reportRepository: Repository<Report>,
-//     @InjectRepository(User)
-//     private readonly userRepository: Repository<User>,
+//     private readonly userRepository: UserRepository,
 //   ) {}
 
-//   async execute(userId: number): Promise<Report[]> {
-//     const user = await this.userRepository.findOne(userId, { relations: ['reports'] });
+//   async execute(userId: number): Promise<ReportM[]> {
+//     const user = await this.userRepository.findOneUser(userId);
 //     if (!user) {
 //       throw new Error('User not found');
 //     }

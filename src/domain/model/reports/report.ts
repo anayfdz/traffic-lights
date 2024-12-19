@@ -6,6 +6,8 @@ export enum Status {
   Funcionando = 'funcionando',
   Dañado = 'dañado',
   Intermitente = 'intermitente',
+  Pendiente = 'pendiente',
+  Resuelto = 'resuelto',
 }
 export class ReportM {
   private _id: number;
@@ -93,5 +95,13 @@ export class ReportM {
   }
   set updated_at(value: Date) {
     this.updated_at = value;
+  }
+  set trafficLight(value: TrafficLightM | null) {
+    this._trafficLight = value;
+  }
+
+  // Método para asignar un semáforo al reporte
+  assignTrafficLight(trafficLight: TrafficLightM | null): void {
+    this._trafficLight = trafficLight;
   }
 }

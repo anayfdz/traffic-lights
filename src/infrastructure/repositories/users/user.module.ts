@@ -17,7 +17,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtTokenService } from '../../../infrastructure/services/jwt/jwt.service';
 //import { JwtConfigModule } from 'src/infrastructure/services/jwt/jwt.module';
 import { JwtConfigModule } from '../../../infrastructure/services/jwt/jwt.module';
-
+//import { UserRepository} from '../../../domain/repositories/users/userRepository.interface'
 
 @Module({
 imports: [ TypeOrmModule.forFeature([Otp, User]), MailModule,OtpModule, BcryptModule, 
@@ -25,7 +25,7 @@ HttpModule,
 PassportModule, 
 JwtConfigModule,
  ],
-  providers: [DatabaseUserRepository, ExternalService, JwtTokenService],
+  providers: [ DatabaseUserRepository, ExternalService, JwtTokenService],
   exports: [DatabaseUserRepository, ExternalService],
 })
 export class UserModule {}

@@ -51,6 +51,11 @@ export class DatabaseTrafficLightRepository implements ITrafficLightRepository {
     return trafficLights.map(this.toTrafficLightM);
   }
 
+  // async findTrafficLightById(id: number): Promise<TrafficLightM | undefined> {
+  //   const findTraffic = await this.trafficLightRepository.findOne({ where: { id } });
+  //   return this.toTrafficLightM(findTraffic)
+  // }
+
   async filterTraffic(department?: string, province?: string, district?: string): Promise<TrafficLightM[]> {
     const queryBuilder = this.trafficLightRepository.createQueryBuilder('tl');
 

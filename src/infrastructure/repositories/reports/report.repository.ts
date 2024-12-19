@@ -75,6 +75,14 @@ constructor(
     return this.toReportM(reportEntity) as ReportM;
   }
 
+  // async findReports(filters: any): Promise<Report[]> {
+  //   const filterReports = await this.reportEntityRepository.find({
+  //     where: filters,
+  //   })
+  //   return filterReports
+  // }
+
+
   async findReportsByUserId(userId: number): Promise<ReportM[]> {
     const findReports = await this.reportEntityRepository.find({
       where: { user: {id: userId} },
@@ -82,6 +90,7 @@ constructor(
     });
     return this.toReportM(findReports) as ReportM[];
   }
+
 
   async updateReport(reportData: ReportM): Promise<ReportM> {
     const reportEntity = await this.reportEntityRepository.findOne({ where: { id: reportData.id } });

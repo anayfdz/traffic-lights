@@ -30,11 +30,12 @@ import { LoginAdminUseCases } from '../../../usecases/admin-users/login-admin.us
 //import { Request } from 'express';
 import { Request as ExpressRequest } from 'express';
 import { JwtAdminAuthGuard } from 'src/infrastructure/common/guards/JwtAuthAdmin.guard';
-import { FindUserUseCase } from '../../../usecases/user/Find-users.usecases';
-import { UpdateUserUseCase } from '../../../usecases/user/update-user.usecases';
+import { FindUserUseCase, UserResponse } from '../../../usecases/user/find-users.usecases';
+// import { UpdateUserUseCase } from '../../../usecases/user/update-user.usecases';
 import { DeleteUserUseCase } from '../../../usecases/user/delete-user.usecases';
 import { UserM } from 'src/domain/model/users/user';
 import { UpdateUserDto } from 'src/infrastructure/common/dto/user/update-user.dto';
+import { error } from 'console';
 @Controller('api/admin')
 @ApiTags('admin-auth')
 @ApiResponse({
@@ -47,9 +48,9 @@ export class AdminController {
     @Inject(UsecasesProxyModule.AdminUserUseCasesProxy)
     private readonly adminUsecaseProxy: UseCaseProxy<LoginAdminUseCases>,
     @Inject(UsecasesProxyModule.FindUserUseCaseProxy)
-    private readonly findUserUseCaseProxy: UseCaseProxy<FindUserUseCase>,
-    @Inject(UsecasesProxyModule.UpdateUserUseCaseProxy)
-    private readonly updateUserUseCaseProxy: UseCaseProxy<UpdateUserUseCase>,
+    private readonly findUserUseCase: UseCaseProxy<FindUserUseCase>,
+    // @Inject(UsecasesProxyModule.UpdateUserUseCaseProxy)
+    // private readonly updateUserUseCaseProxy: UseCaseProxy<UpdateUserUseCase>,
     @Inject(UsecasesProxyModule.DeleteUserUseCaseProxy)
     private readonly deleteUserUseCaseProxy: UseCaseProxy<DeleteUserUseCase>,
   ) {}
@@ -88,17 +89,22 @@ export class AdminController {
     return { message: 'Logout exitoso' };
   }
 
-  @Get()
+  @Get('users')
   @UseGuards(JwtAdminAuthGuard)
-  async getAllUsers(): Promise<UserM[]> {
-    return await this.findUserUseCaseProxy.getInstance().execute();
+  async getAllUsers(): Promise<UserResponse[]> {
+    try {
+      return await this.findUserUseCase.getInstance().execute();
+    } catch(e) {
+      throw new Error('No se pudo obtener la lista de usuarios');
+    }
+    
   }
 
-  @Put(':id')
-  @UseGuards(JwtAdminAuthGuard)
-  async updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto): Promise<UserM> {
-    return await this.updateUserUseCaseProxy.getInstance().execute(id, updateUserDto);
-  }
+  // @Put(':id')
+  // @UseGuards(JwtAdminAuthGuard)
+  // async updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto): Promise<UserM> {
+  //   return await this.updateUserUseCaseProxy.getInstance().execute(id, updateUserDto);
+  // }
 
   @Delete(':id')
   @UseGuards(JwtAdminAuthGuard)

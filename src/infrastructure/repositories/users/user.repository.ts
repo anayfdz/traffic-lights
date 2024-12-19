@@ -68,6 +68,16 @@ export class DatabaseUserRepository implements UserRepository {
   async getUserById(userId: number): Promise<User> {
     return await this.userEntityRepository.findOne({ where: { id: userId } });
   }
+//   async findOneUser(id: number): Promise<UserM> {
+//     const user = await this.userEntityRepository.findOne({
+//       where: { id },
+//       relations: ['reports'],
+//     });
+//     if (!user) {
+//       throw new Error('User not found'); 
+//     }
+//     return this.toUser(user);
+// }
 
   async resendOtp(email: string): Promise<void> {
     const user = await this.userEntityRepository.findOne({ where: { email } });
@@ -183,8 +193,8 @@ export class DatabaseUserRepository implements UserRepository {
       userEntity.status,
       userEntity.created_at,
       userEntity.updated_at,
-      userEntity.reports.map((report) => this.toReport(report)),
-      userEntity.otps.map((otp) => this.toOtp(otp)),
+      (userEntity.reports || []).map((report) => this.toReport(report)),
+      (userEntity.otps || []).map((otp) => this.toOtp(otp)),
     );
     return userMInstance;
   }
