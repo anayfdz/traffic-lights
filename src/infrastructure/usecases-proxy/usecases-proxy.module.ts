@@ -60,7 +60,7 @@ import { UpdateUserUseCase } from '../../usecases/user/update-user.usecases';
 import { DeleteUserUseCase } from '../../usecases/user/delete-user.usecases';
 //import { AssignReportUseCase } from 'src/usecases/reports/assign-report.usecase';
 //import { DeleteReportUseCase } from 'src/usecases/reports/delete-report.usecase';
-//import { GetReportDetailsUseCase } from 'src/usecases/reports/get-detail-report.usecase';
+import { GetReportDetailsUseCase } from 'src/usecases/reports/get-detail-report.usecase';
 import { GetUserReportsUseCase } from 'src/usecases/reports/get-user-reports.usecase';
 //import { ResolveReportUseCase } from 'src/usecases/reports/resolve-report.usecase';
 @Module({
@@ -98,7 +98,7 @@ export class UsecasesProxyModule {
   static ReportTrafficLightUseCaseProxy = 'ReportTrafficLightUseCaseProxy';
   //static AssignReportUseCaseProxy = 'AssignReportUseCaseProxy';
   //static DeleteReportUseCaseProxy = 'DeleteReportUseCaseProxy';
-  //static GetReportDetailsUseCaseProxy = 'GetReportDetailsUseCaseProxy';
+  static GetReportDetailsUseCaseProxy = 'GetReportDetailsUseCaseProxy';
   static GetUserReportsUseCaseProxy = 'GetUserReportsUseCaseProxy';
   //static ResolveReportUseCaseProxy = 'ResolveReportUseCaseProxy'
 
@@ -182,11 +182,11 @@ export class UsecasesProxyModule {
           provide: UsecasesProxyModule.DeleteUserUseCaseProxy,
           useFactory: (userRepo: DatabaseUserRepository) => new UseCaseProxy(new DeleteUserUseCase(userRepo)),
         },
-        // {
-        //   inject: [DatabaseReportRepository],
-        //   provide: UsecasesProxyModule.GetReportDetailsUseCaseProxy,
-        //   useFactory: (reportRepo: DatabaseReportRepository) => new GetReportDetailsUseCase(reportRepo)
-        // },
+        {
+          inject: [DatabaseReportRepository],
+          provide: UsecasesProxyModule.GetReportDetailsUseCaseProxy,
+          useFactory: (reportRepo: DatabaseReportRepository) => new UseCaseProxy(new GetReportDetailsUseCase(reportRepo))
+        },
         {
           inject: [DatabaseReportRepository],
           provide: UsecasesProxyModule.GetUserReportsUseCaseProxy,
@@ -303,7 +303,7 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.DeleteTrafficLightUseCaseProxy,
         //UsecasesProxyModule.AssignReportUseCaseProxy,
         //UsecasesProxyModule.DeleteReportUseCaseProxy,
-        //UsecasesProxyModule.GetReportDetailsUseCaseProxy,
+        UsecasesProxyModule.GetReportDetailsUseCaseProxy,
         UsecasesProxyModule.GetUserReportsUseCaseProxy,
         //UsecasesProxyModule.ResolveReportUseCaseProxy
       ],

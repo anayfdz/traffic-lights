@@ -26,8 +26,7 @@ import { DeleteTrafficLightUseCase } from '../../../usecases/traffic-lights/dele
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 // import { AssignReportUseCase } from 'src/usecases/reports/assign-report.usecase';
 // import { DeleteReportUseCase } from 'src/usecases/reports/delete-report.usecase';
-// import { GetReportDetailsUseCase } from 'src/usecases/reports/get-detail-report.usecase';
-// import { GetUserReportsUseCase } from 'src/usecases/reports/get-user-reports.usecase';
+import { GetReportDetailsUseCase } from 'src/usecases/reports/get-detail-report.usecase';
 // import { ResolveReportUseCase } from 'src/usecases/reports/resolve-report.usecase';
 import { UpdateReportStatusDto } from 'src/infrastructure/common/dto/report/update-report.dto';
 import { ReportM } from '../../../domain/model/reports/report';
@@ -53,8 +52,8 @@ export class ReportController {
     // private readonly assignReportUseCase: UseCaseProxy<AssignReportUseCase>,
     // @Inject(UsecasesProxyModule.DeleteReportUseCaseProxy)
     // private readonly deleteReportUseCase: UseCaseProxy<DeleteReportUseCase>,
-    // @Inject(UsecasesProxyModule.GetReportDetailsUseCaseProxy)
-    // private readonly getReportDetailsUseCase: UseCaseProxy<GetReportDetailsUseCase>,
+    @Inject(UsecasesProxyModule.GetReportDetailsUseCaseProxy)
+    private readonly getReportDetailsUseCase: UseCaseProxy<GetReportDetailsUseCase>,
     @Inject(UsecasesProxyModule.GetUserReportsUseCaseProxy)
     private readonly getUserReportsUseCase: UseCaseProxy<GetUserReportsUseCase>,
     // @Inject(UsecasesProxyModule.ResolveReportUseCaseProxy)
@@ -108,23 +107,22 @@ export class ReportController {
     return await this.getUserReportsUseCase.getInstance().execute(query);
   }
 
-//   // Endpoint para ver detalles de un reporte específico
-//   @Get(':id')
-//   @UseGuards(JwtAdminAuthGuard)
-//   @ApiBearerAuth()
-//   @ApiOperation({ summary: 'Ver detalles de un reporte específico' })
-//   @ApiResponse({
-//     status: 200,
-//     description: 'Detalles del reporte obtenidos con éxito',
-//     type: ReportM,
-//   })
-//   @ApiResponse({
-//     status: 404,
-//     description: 'Reporte no encontrado',
-//   })
-//   async getReportDetails(@Param('id') id: number) {
-//     return await this.getReportDetailsUseCase.getInstance().execute(id)
-//   }
+  @Get(':id')
+  @UseGuards(JwtAdminAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Ver detalles de un reporte específico' })
+  @ApiResponse({
+    status: 200,
+    description: 'Detalles del reporte obtenidos con éxito',
+    type: ReportM,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Reporte no encontrado',
+  })
+  async getReportDetails(@Param('id') id: number) {
+    return await this.getReportDetailsUseCase.getInstance().execute(id)
+  }
 
 //   // Endpoint para marcar un reporte como resuelto
 //   @Put(':id/resolve')
