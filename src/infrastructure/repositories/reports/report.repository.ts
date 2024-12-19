@@ -75,12 +75,62 @@ constructor(
     return this.toReportM(reportEntity) as ReportM;
   }
 
-  // async findReports(filters: any): Promise<Report[]> {
-  //   const filterReports = await this.reportEntityRepository.find({
-  //     where: filters,
-  //   })
-  //   return filterReports
-  // }
+  async findReports(filters: any): Promise<ReportM[]> {
+    const queryBuilder = this.reportEntityRepository.createQueryBuilder('report')
+      .leftJoinAndSelect('report.user', 'user')
+      .leftJoinAndSelect('report.trafficLight', 'trafficLight')
+      .leftJoinAndSelect('report.evidences', 'evidence');
+  
+    if (filters.status) {
+      queryBuilder.andWhere('report.status = :status', { status: filters.status });
+    }
+  
+    if (filters.department) {
+      queryBuilder.andWhere('report.department = :department', { department: filters.department });
+    }
+    if (filters.province) {
+      queryBuilder.andWhere('trafficLight.province = :province', { province: filters.province });
+    }
+  
+    if (filters.district) {
+      queryBuilder.andWhere('trafficLight.district = :district', { district: filters.district });
+    }
+  
+    if (filters.date_range) {
+      const [startDate, endDate] = filters.date_range.split(',');
+      queryBuilder.andWhere('report.reported_at BETWEEN :startDate AND :endDate', {
+        startDate: startDate.trim(),
+        endDate: endDate.trim(),
+      });
+    }
+
+    queryBuilder.select([
+      'report.id',
+      'report.user_id',
+      'report.traffic_light_id', 
+      'report.description', 
+      'report.status', 
+      'report.comments', 
+      'report.reported_at', 
+      'report.created_at', 
+      'report.updated_at'
+      // 'report.status',
+      // 'report.description',
+      // 'report.comments',
+      // 'report.reported_at',
+      // 'user.id',
+      // 'user.name', 
+      // 'user.email',
+      // 'trafficLight.id',
+      // 'trafficLight.type',
+      // 'evidence.id',
+    ])
+  
+    const reports = await queryBuilder.getMany();
+  
+    return reports.map((report) => this.toReportM(report)) as ReportM[];
+  }
+  
 
 
   async findReportsByUserId(userId: number): Promise<ReportM[]> {
@@ -162,6 +212,20 @@ constructor(
 }
 
   private toUser(userEntity: User): UserM {
+    if (!userEntity) {
+      return new UserM(
+        0, 
+        'No Name',
+        'No Last Name',
+        'No Email',
+        'No Password',
+        'No Nickname',
+        'pending_validation',
+        new Date(),
+        new Date(),
+        []
+      );
+    }
     return new UserM(
       userEntity.id,
       userEntity.name,

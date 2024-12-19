@@ -7,7 +7,7 @@ import { CreateTrafficLightUseCase } from '../traffic-lights/create-traffic-ligh
 //import { AssignReportUseCase } from './assign-report.usecase';
 //import { DeleteReportUseCase } from './delete-report.usecase';
 //import { GetReportDetailsUseCase } from './get-detail-report.usecase';
-//import { GetUserReportsUseCase } from './get-user-reports.usecase';
+import { GetUserReportsUseCase } from './get-user-reports.usecase';
 //import { ResolveReportUseCase } from './resolve-report.usecase';
 
 @Module({
@@ -16,14 +16,14 @@ import { CreateTrafficLightUseCase } from '../traffic-lights/create-traffic-ligh
     //AssignReportUseCase, 
     //DeleteReportUseCase, 
     // GetReportDetailsUseCase,
-    // GetUserReportsUseCase,
+    GetUserReportsUseCase,
     // ResolveReportUseCase
   ],
   providers: [ReportModule, TrafficModule],
   exports: [ReportModule, TrafficModule, 
     // DeleteReportUseCase, 
     // GetReportDetailsUseCase,
-    // GetUserReportsUseCase,
+    GetUserReportsUseCase,
     // ResolveReportUseCase
   ],
 })

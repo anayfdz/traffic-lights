@@ -32,7 +32,7 @@ import { Request as ExpressRequest } from 'express';
 import { JwtAdminAuthGuard } from 'src/infrastructure/common/guards/JwtAuthAdmin.guard';
 import { FindUserUseCase, UserResponse } from '../../../usecases/user/find-users.usecases';
 import { UpdateUserUseCase } from '../../../usecases/user/update-user.usecases';
-import { DeleteUserUseCase } from '../../../usecases/user/delete-user.usecases';
+import { DeleteUserUseCase, ResponseD } from '../../../usecases/user/delete-user.usecases';
 import { UserM } from 'src/domain/model/users/user';
 import { UpdateUserDto } from '../../common/dto/user/update-user.dto';
 import { error } from 'console';
@@ -108,9 +108,9 @@ export class AdminController {
     return await this.updateUserUseCaseProxy.getInstance().execute(id, updateUserDto);
   }
 
-  @Delete(':id')
+  @Delete('users/:id')
   @UseGuards(JwtAdminAuthGuard)
-  async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  async deleteUser(@Param('id') id: number): Promise<ResponseD> {
     return await this.deleteUserUseCaseProxy.getInstance().execute(id);
   }
 
