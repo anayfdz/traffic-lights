@@ -139,15 +139,7 @@ export class DatabaseUserRepository implements UserRepository {
 
   async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<UserM> {
     const userEntity = await this.userEntityRepository.findOne({ where: { id } });
-    if (!userEntity) {
-      throw new Error('User not found');
-    }
-    userEntity.name = updateUserDto.name || userEntity.name;
-    userEntity.last_name = updateUserDto.last_name || userEntity.last_name;
-    userEntity.nickname = updateUserDto.nickname || userEntity.nickname;
-    userEntity.email = updateUserDto.email || userEntity.email;
-    userEntity.status = updateUserDto.status || userEntity.status;
-
+    Object.assign(userEntity, updateUserDto);
     const updatedUser = await this.userEntityRepository.save(userEntity);
     return this.toUser(updatedUser);
   }

@@ -31,10 +31,10 @@ import { LoginAdminUseCases } from '../../../usecases/admin-users/login-admin.us
 import { Request as ExpressRequest } from 'express';
 import { JwtAdminAuthGuard } from 'src/infrastructure/common/guards/JwtAuthAdmin.guard';
 import { FindUserUseCase, UserResponse } from '../../../usecases/user/find-users.usecases';
-// import { UpdateUserUseCase } from '../../../usecases/user/update-user.usecases';
+import { UpdateUserUseCase } from '../../../usecases/user/update-user.usecases';
 import { DeleteUserUseCase } from '../../../usecases/user/delete-user.usecases';
 import { UserM } from 'src/domain/model/users/user';
-import { UpdateUserDto } from 'src/infrastructure/common/dto/user/update-user.dto';
+import { UpdateUserDto } from '../../common/dto/user/update-user.dto';
 import { error } from 'console';
 @Controller('api/admin')
 @ApiTags('admin-auth')
@@ -49,8 +49,8 @@ export class AdminController {
     private readonly adminUsecaseProxy: UseCaseProxy<LoginAdminUseCases>,
     @Inject(UsecasesProxyModule.FindUserUseCaseProxy)
     private readonly findUserUseCase: UseCaseProxy<FindUserUseCase>,
-    // @Inject(UsecasesProxyModule.UpdateUserUseCaseProxy)
-    // private readonly updateUserUseCaseProxy: UseCaseProxy<UpdateUserUseCase>,
+    @Inject(UsecasesProxyModule.UpdateUserUseCaseProxy)
+    private readonly updateUserUseCaseProxy: UseCaseProxy<UpdateUserUseCase>,
     @Inject(UsecasesProxyModule.DeleteUserUseCaseProxy)
     private readonly deleteUserUseCaseProxy: UseCaseProxy<DeleteUserUseCase>,
   ) {}
@@ -100,11 +100,13 @@ export class AdminController {
     
   }
 
-  // @Put(':id')
-  // @UseGuards(JwtAdminAuthGuard)
-  // async updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto): Promise<UserM> {
-  //   return await this.updateUserUseCaseProxy.getInstance().execute(id, updateUserDto);
-  // }
+  @Put('users/:id')
+  @UseGuards(JwtAdminAuthGuard)
+  async updateUser(
+  @Param('id') id: number, 
+  @Body() updateUserDto: any) {
+    return await this.updateUserUseCaseProxy.getInstance().execute(id, updateUserDto);
+  }
 
   @Delete(':id')
   @UseGuards(JwtAdminAuthGuard)
