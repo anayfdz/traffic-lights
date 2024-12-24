@@ -63,6 +63,7 @@ import { AssignReportUseCase } from 'src/usecases/reports/assign-report.usecase'
 import { GetReportDetailsUseCase } from 'src/usecases/reports/get-detail-report.usecase';
 import { GetUserReportsUseCase } from 'src/usecases/reports/get-user-reports.usecase';
 import { ResolveReportUseCase } from 'src/usecases/reports/resolve-report.usecase';
+import { ResendOtpUsecases } from 'src/usecases/auth/resendOtp.usecases';
 @Module({
   imports: [
     LoggerModule,
@@ -140,9 +141,9 @@ export class UsecasesProxyModule {
           useFactory: () => new UseCaseProxy(new LogoutUseCases()),
         },
         {
-          inject: [],
+          inject: [DatabaseUserRepository],
           provide: UsecasesProxyModule.RESEND_USECASES_PROXY,
-          useFactory: () => new UseCaseProxy(new LogoutUseCases()),
+          useFactory: (userRepo: DatabaseUserRepository) => new UseCaseProxy(new ResendOtpUsecases(userRepo)),
         },
         {
           inject: [DatabaseUserRepository, ExternalService],

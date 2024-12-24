@@ -75,8 +75,13 @@ export class AuthController {
   @ApiBody({ type: ResendOtpDto })
   @ApiResponse({ status: 200, description: 'OTP resent successfully' })
   @ApiResponse({ status: 400, description: 'Invalid request' })
-  async resendOtp(@Body() resendOtpDto: ResendOtpDto): Promise<any> { 
-    await this.resendUsecaseProxy.getInstance().execute(resendOtpDto)
+  async resendOtp(@Body() email: string): Promise<any> { 
+    try {
+      await this.resendUsecaseProxy.getInstance().execute(email)
+      return { message: 'OTP resent successfully' }
+    } catch(error) {
+      return { message: 'Invalid request' }
+    }
   }
 
   @Get('is_authenticated')

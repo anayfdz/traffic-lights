@@ -37,9 +37,9 @@ export class UserController {
     description: 'Usuario registrado con éxito',
   })
   @ApiResponse({ status: 400, description: 'Solicitud inválida' })
-  async registerUser(@Body() createUserDto: CreateUserDto) {
+  async registerUser(@Body() createUser: any) {
     const registerUseCase = this.registerUserUseCase.getInstance();
-    const user = await registerUseCase.execute(createUserDto);
+    const user = await registerUseCase.execute(createUser);
     return { message: 'Usuario registrado con éxito.Se ha enviado un OTP a tu correo electrónico.'}
   }
 

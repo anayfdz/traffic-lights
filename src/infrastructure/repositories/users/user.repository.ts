@@ -64,6 +64,15 @@ export class DatabaseUserRepository implements UserRepository {
     return this.toUser(savedUser);
   }
 
+  async findOneByNickname(nickname: string): Promise<UserM | null> {
+    const nick = await this.userEntityRepository.findOne({ where: { nickname } });
+    if (!nick) {
+      console.log(`Nickname ${nickname} no encontrado. Se procederá con la creación.`);
+      return null; // Esto indica que el nickname no existe y se puede crear un nuevo usuario
+    }
+    return this.toUser(nick);
+  }
+
 
   async getUserById(userId: number): Promise<User> {
     return await this.userEntityRepository.findOne({ where: { id: userId } });
@@ -102,8 +111,10 @@ export class DatabaseUserRepository implements UserRepository {
     return { access_token };
   }
 
-  async findOneByEmail(email: string): Promise<User | undefined> { 
-    return this.userEntityRepository.findOne({ where: { email } }); 
+  async findOneByEmail(email: string): Promise<UserM | undefined> { 
+    const existEmail = await this.userEntityRepository.findOne({ where: {email: email}  as FindOptionsWhere<User>}); 
+    if (!existEmail) { throw new Error('User not found'); }
+    return this.toUser(existEmail)
   } 
     async comparePasswords(plainPassword: string, hashedPassword: string): Promise<boolean> { 
     return this.bcryptService.compare(plainPassword, hashedPassword); 

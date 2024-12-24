@@ -10,6 +10,7 @@ import { LoginDto } from "src/infrastructure/common/dto/auth/login.dto";
 
 export interface UserRepository {
   registerUser(createUserDto: CreateUserDto): Promise<UserM>;
+  findOneByNickname(nickname: string): Promise<UserM | null>
   getUserById(userId: number): Promise<User>;
   resendOtp(email: string): Promise<void>;
   loginUser(loginDto: LoginDto): Promise<{access_token: string}>
@@ -20,6 +21,6 @@ export interface UserRepository {
   updateUser(id: number, updateUserDto: UpdateUserDto): Promise<UserM>;
   deleteUser(id: number): Promise<void>;
   getUserByEmail(email: string): Promise<boolean>;
-  findOneByEmail(email: string): Promise<User | undefined>
+  findOneByEmail(email: string): Promise<UserM | undefined>
   comparePasswords(plainPassword: string, hashedPassword: string): Promise<boolean>
 }
